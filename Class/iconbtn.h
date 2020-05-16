@@ -13,10 +13,16 @@ protected:
 public:
     explicit IconBtn(QWidget *parent = nullptr);
 
-    VARIBLE_FUNC(Icon, icon, QIcon)
+    bool checkMouseAt();
+
+    VARIBLE_FUNC(ColorNormal, colorNormal, QColor)
+    VARIBLE_FUNC(ColorMouseAt, colorMouseAt, QColor)
+    VARIBLE_FUNC(ColorHolding, colorHolding, QColor)
 
 private:
-    QIcon icon;
+    QColor colorNormal = QColor(200,200,200);
+    QColor colorMouseAt = QColor(220,220,220);
+    QColor colorHolding = QColor(180,180,180);
 };
 
 #endif // ICONBTN_H

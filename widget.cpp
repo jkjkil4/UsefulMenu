@@ -22,7 +22,14 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     limitWidth(btnList, 24);
     btnList->move((32 - btnList->width()) / 2, 16);
     //功能列表的按钮
-    limitSize(new IconBtn(btnList), 16, 16);
+    IconBtn *btnGetScreen = new IconBtn(btnList);
+    btnGetScreen->setIcon(QIcon(":/funcBtn/Resource/cut.png"));
+    limitSize(btnGetScreen, 20, 20);
+    //
+    IconBtn *btnShortcut = new IconBtn(btnList);
+    btnShortcut->setIcon(QIcon(":/funcBtn/Resource/fast.png"));
+    limitSize(btnShortcut, 20, 20);
+
     btnList->updateChildsPos();
     maxHeight = btnList->getSuitableHeight() + btnList->y();
 

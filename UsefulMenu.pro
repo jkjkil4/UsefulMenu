@@ -47,3 +47,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 include( $$PWD/../../_1Classes/JQCPUMonitor/JQLibrary/JQCPUMonitor.pri )
+
+RESOURCES += \
+    resource.qrc
