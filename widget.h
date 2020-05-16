@@ -6,9 +6,16 @@
 class Ball;
 class BtnList;
 
+#define WIDGET_DEBUG
+
 class Widget : public QWidget
 {
     Q_OBJECT
+protected:
+#ifdef WIDGET_DEBUG
+    void paintEvent(QPaintEvent *);
+#endif
+
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
@@ -18,6 +25,9 @@ public:
 
     Ball *ball = nullptr;
     BtnList *btnList = nullptr;
+
+private:
+    int maxHeight = 32;
 };
 
 #endif // WIDGET_H

@@ -5,23 +5,30 @@
 
 #include "Widget/ball.h"
 #include "Widget/btnlist.h"
+
+#include "Class/iconbtn.h"
+
 #include "Class/global.h"
 
 #include <QDebug>
 
+#ifdef WIDGET_DEBUG
+#include <QPainter>
+#endif
+
 Widget::Widget(QWidget *parent) : QWidget(parent) {
-    //设置为32x32
-    showNarrow();
-    //设置  窗口不显示在任务栏，无边框窗口，保持顶端
-    setWindowFlags(Qt::SubWindow | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    //设置在窗口关闭时退出
-    setAttribute(Qt::WA_QuitOnClose);
-    //设置透明背景
-    setAttribute(Qt::WA_TranslucentBackground);
+    //功能列表，
+    btnList = new BtnList(this);
+    limitWidth(btnList, 24);
+    btnList->move((32 - btnList->width()) / 2, 16);
+    //功能列表的按钮
+    limitSize(new IconBtn(btnList), 16, 16);
+    btnList->updateChildsPos();
+    maxHeight = btnList->getSuitableHeight() + btnList->y();
 
     //球形区域，显示CPU和RAM使用率
     ball = new Ball(this);
-
+    //信号与槽
     connect(ball, &Ball::wndShowNarrow, [=]{
         showNarrow();
     });
@@ -31,7 +38,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     connect(ball, &Ball::wndMoveOffset, [=](int xOffset, int yOffset){
         int toX = x() + xOffset;
         int toY = y() + yOffset;
-        QSize wndSize = QGuiApplication::screens()[0]->availableSize();
+        QSize wndSize = QGuiApplication::primaryScreen()->availableSize();
         move(qBound(0, toX, wndSize.width() - width()),
              qBound(0, toY, wndSize.height() - height()));
     });
@@ -39,9 +46,14 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
         close();
     });
 
-    //功能列表，
-    //btnList = new BtnList;
-
+    //设置为32x32
+    showNarrow();
+    //设置  窗口不显示在任务栏，无边框窗口，保持顶端
+    setWindowFlags(Qt::SubWindow | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    //设置在窗口关闭时退出
+    setAttribute(Qt::WA_QuitOnClose);
+    //设置透明背景
+    setAttribute(Qt::WA_TranslucentBackground);
 }
 
 Widget::~Widget() {
@@ -51,8 +63,17 @@ Widget::~Widget() {
 
 void Widget::showNarrow() {
     limitSize(this, 32, 32);
+    btnList->setVisible(false);
 }
 
 void Widget::showExpand() {
-
+    limitSize(this, 32, maxHeight);
+    btnList->setVisible(true);
 }
+
+#ifdef WIDGET_DEBUG
+void Widget::paintEvent(QPaintEvent *) {
+    QPainter p(this);
+    p.fillRect(0, 0, width(), height(), Qt::green);
+}
+#endif

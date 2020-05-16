@@ -26,6 +26,7 @@ DEFINES += WIN32_LEAN_AND_MEAN
 CONFIG += c++11
 
 SOURCES += \
+        Class/iconbtn.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
         main.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
         widget.cpp
 
 HEADERS += \
+        Class/iconbtn.h \
         Widget/ball.h \
         Class/global.h \
         Class/rammonitor.h \

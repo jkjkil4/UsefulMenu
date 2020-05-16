@@ -14,6 +14,7 @@
 Ball::Ball(QWidget *parent) : QWidget(parent) {
     //限制大小
     limitSize(this, 32, 32);
+    setCursor(Qt::PointingHandCursor);
 
     //初始化JQCPUMonitor
     JQCPUMonitor::initialize();

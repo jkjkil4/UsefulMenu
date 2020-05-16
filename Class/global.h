@@ -3,6 +3,11 @@
 
 #include <QWidget>
 
+#define VARIBLE_FUNC(FuncName, varibleName, varibleType)\
+    varibleType get##FuncName(){return varibleName;}\
+    void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
+
+
 inline void limitWidth(QWidget *widget, int w) {
     widget->setMinimumWidth(w);
     widget->setMaximumWidth(w);
