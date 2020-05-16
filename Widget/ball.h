@@ -16,6 +16,7 @@ protected:
 
 public:
     explicit Ball(QWidget *parent = nullptr);
+    ~Ball() = default;
 
 signals:
     void wndShowNarrow();

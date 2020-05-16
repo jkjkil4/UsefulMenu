@@ -13,6 +13,7 @@ protected:
 
 public:
     explicit BtnList(QWidget *parent = nullptr);
+    ~BtnList() = default;
 
     void updateChildsPos();
 

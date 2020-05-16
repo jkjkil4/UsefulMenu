@@ -10,6 +10,14 @@
     void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
 
 
+template<typename T>inline void safeDelete(T *&p) {
+    if(p) {
+        delete p;
+        p = nullptr;
+    }
+}
+
+
 inline void limitWidth(QWidget *widget, int w) {
     widget->setMinimumWidth(w);
     widget->setMaximumWidth(w);
