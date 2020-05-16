@@ -1,11 +1,15 @@
 #include "ball.h"
 
 #include <QPainter>
+#include <QMenu>
+#include <QAction>
 
 #include <JQCPUMonitor>
 
-#include "rammonitor.h"
-#include "global.h"
+#include "Class/rammonitor.h"
+#include "Class/global.h"
+
+#include <QDebug>
 
 Ball::Ball(QWidget *parent) : QWidget(parent) {
     //限制大小
@@ -30,6 +34,43 @@ void Ball::onCheckUsage() {
 
     //更新
     update();
+}
+
+void Ball::mousePressEvent(QMouseEvent *ev) {
+    if(ev->button() == Qt::LeftButton) {
+        mousePosStart = ev->pos();
+        emit wndShowNarrow();
+    }
+}
+
+void Ball::mouseMoveEvent(QMouseEvent *ev) {
+    QPoint mousePos = ev->pos();
+    int xOffset = mousePos.x() - mousePosStart.x();
+    int yOffset = mousePos.y() - mousePosStart.y();
+    emit wndMoveOffset(xOffset, yOffset);
+}
+
+void Ball::mouseReleaseEvent(QMouseEvent *ev) {
+    switch((int)ev->button()) {
+    case Qt::LeftButton:
+        emit wndShowExpand();
+        break;
+    case Qt::RightButton:{
+        QAction actExit("退出");
+
+        QMenu menu;
+        menu.addAction(&actExit);
+
+        menu.move(cursor().pos());
+        QAction *res = menu.exec();
+
+        if(res == &actExit) {
+            emit closeWidget();
+        }
+
+        break;
+    }
+    }
 }
 
 void Ball::paintEvent(QPaintEvent *) {

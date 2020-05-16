@@ -26,15 +26,17 @@ DEFINES += WIN32_LEAN_AND_MEAN
 CONFIG += c++11
 
 SOURCES += \
-        ball.cpp \
+        Widget/ball.cpp \
+        Widget/btnlist.cpp \
         main.cpp \
-        rammonitor.cpp \
+        Class/rammonitor.cpp \
         widget.cpp
 
 HEADERS += \
-        ball.h \
-        global.h \
-        rammonitor.h \
+        Widget/ball.h \
+        Class/global.h \
+        Class/rammonitor.h \
+        Widget/btnlist.h \
         widget.h
 
 # Default rules for deployment.

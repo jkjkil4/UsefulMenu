@@ -3,15 +3,21 @@
 
 #include <QWidget>
 
+class Ball;
+class BtnList;
+
 class Widget : public QWidget
 {
     Q_OBJECT
-protected:
-    void focusOutEvent(QFocusEvent *);
-
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+
+    void showNarrow();
+    void showExpand();
+
+    Ball *ball = nullptr;
+    BtnList *btnList = nullptr;
 };
 
 #endif // WIDGET_H
