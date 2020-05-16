@@ -1,0 +1,32 @@
+#ifndef BALL_H
+#define BALL_H
+
+#include <QWidget>
+
+#include <QTimer>
+
+class Ball : public QWidget
+{
+    Q_OBJECT
+protected:
+    void paintEvent(QPaintEvent *);
+    void focusOutEvent(QFocusEvent *);
+
+public:
+    explicit Ball(QWidget *parent = nullptr);
+
+public slots:
+    void onCheckUsage();
+
+private:
+    QTimer *checkUsage = new QTimer(this);
+
+    //CPU使用率
+    double cpuUsage = 0;
+    int cpuArc = 0;
+    //内存使用率
+    double ramUsage = 0;
+    int ramArc = 0;
+};
+
+#endif // BALL_H
