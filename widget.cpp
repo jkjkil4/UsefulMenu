@@ -30,9 +30,11 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     ball = new Ball(this);
     //信号与槽
     connect(ball, &Ball::wndShowNarrow, [=]{
+        isMoving = true;
         showNarrow();
     });
     connect(ball, &Ball::wndShowExpand, [=]{
+        isMoving = false;
         showExpand();
     });
     connect(ball, &Ball::wndMoveOffset, [=](int xOffset, int yOffset){
@@ -42,9 +44,10 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
         move(qBound(0, toX, wndSize.width() - width()),
              qBound(0, toY, wndSize.height() - height()));
     });
-    connect(ball, &Ball::closeWidget, [=]{
-        close();
-    });
+    connect(ball, &Ball::closeWidget, [=]{close();});
+
+    //检测鼠标进入和离开
+    connect(checkMouse, SIGNAL(timeout()), this, SLOT(onCheckMouse()));
 
     //设置为32x32
     showNarrow();
@@ -54,6 +57,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     setAttribute(Qt::WA_QuitOnClose);
     //设置透明背景
     setAttribute(Qt::WA_TranslucentBackground);
+    //不按下鼠标也可触发mouseMoveEvent
+    setMouseTracking(true);
+    ball->setMouseTracking(true);
 }
 
 Widget::~Widget() {
@@ -69,6 +75,20 @@ void Widget::showNarrow() {
 void Widget::showExpand() {
     limitSize(this, 32, maxHeight);
     btnList->setVisible(true);
+}
+
+void Widget::onCheckMouse() {
+    if(!isMoving && !QRect(0, 0, width(), height()).contains(mapFromGlobal(cursor().pos()))) {
+        showNarrow();
+        checkMouse->stop();
+    }
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *) {
+    if(!checkMouse->isActive()) {
+        showExpand();
+        checkMouse->start(16);
+    }
 }
 
 #ifdef WIDGET_DEBUG

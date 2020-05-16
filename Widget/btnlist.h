@@ -22,7 +22,7 @@ public:
     VARIBLE_FUNC(SuitableHeight, suitableHeight, int)
 
 private:
-    int start = 24;
+    int start = 20;
     int spacing = 5;
 
     int suitableHeight = 10;

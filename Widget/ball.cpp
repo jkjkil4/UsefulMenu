@@ -45,10 +45,13 @@ void Ball::mousePressEvent(QMouseEvent *ev) {
 }
 
 void Ball::mouseMoveEvent(QMouseEvent *ev) {
-    QPoint mousePos = ev->pos();
-    int xOffset = mousePos.x() - mousePosStart.x();
-    int yOffset = mousePos.y() - mousePosStart.y();
-    emit wndMoveOffset(xOffset, yOffset);
+    if(ev->buttons() & Qt::LeftButton) {
+        QPoint mousePos = ev->pos();
+        int xOffset = mousePos.x() - mousePosStart.x();
+        int yOffset = mousePos.y() - mousePosStart.y();
+        emit wndMoveOffset(xOffset, yOffset);
+    }
+    ev->ignore();
 }
 
 void Ball::mouseReleaseEvent(QMouseEvent *ev) {

@@ -2,9 +2,7 @@
 
 #include <QPainter>
 
-BtnList::BtnList(QWidget *parent) : QWidget(parent) {
-
-}
+BtnList::BtnList(QWidget *parent) : QWidget(parent) {}
 
 void BtnList::updateChildsPos() {
     int offset = 0;
@@ -21,6 +19,7 @@ void BtnList::updateChildsPos() {
 
 void BtnList::paintEvent(QPaintEvent *) {
     QPainter p(this);
+    p.setRenderHint(QPainter::Antialiasing, true);
 
     p.setPen(QColor(190,190,190));
     p.setBrush(QColor(230,230,230));

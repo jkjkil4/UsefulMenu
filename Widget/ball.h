@@ -20,7 +20,9 @@ public:
 signals:
     void wndShowNarrow();
     void wndShowExpand();
+
     void wndMoveOffset(int xOffset, int yOffset);
+
     void closeWidget();
 
 public slots:
