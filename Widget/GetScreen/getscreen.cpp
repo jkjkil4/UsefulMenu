@@ -70,21 +70,21 @@ QCursor GetScreen::getCursorType(int flags) {
 
 
 void GetScreen::onAreaChanged() {
-    area.x1 = qBound(0, area.x1, img->width() - 1);
-    area.x2 = qBound(0, area.x2, img->width() - 1);
-    area.y1 = qBound(0, area.y1, img->height() - 1);
-    area.y2 = qBound(0, area.y2, img->height() - 1);
+//    area.x1 = qBound(0, area.x1, img->width());
+//    area.x2 = qBound(0, area.x2, img->width());
+//    area.y1 = qBound(0, area.y1, img->height());
+//    area.y2 = qBound(0, area.y2, img->height());
 
     AreaParent *pSender = (AreaParent*)sender();
     if(pSender)
         pSender->onOtherMoved();
     if(!changeArea->isActive())
-        changeArea->start(16);
+        changeArea->start(18);
 }
 void GetScreen::onChangeAreaTimeout() {
     for(auto point : areaWidgets)
         point->onOtherMoved();
-    //update();
+    update();
 }
 
 void GetScreen::onAreaChangeDone() {

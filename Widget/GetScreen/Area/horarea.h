@@ -12,10 +12,10 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 public:
-    enum Type {Point, Line};
-
     explicit HorArea(Type type, int *pX, int *pY1, int *pY2, QWidget *parent = nullptr);
     ~HorArea() override = default;
+
+    void onMouseMoving(int x);
 
     void onOtherMoved() override;
 

@@ -9,12 +9,18 @@ class AreaParent : public QWidget
 {
     Q_OBJECT
 public:
+    enum Type {Point, Line};
+
     explicit AreaParent(QWidget *parent = nullptr)
         : QWidget(parent){}
     ~AreaParent() override = default;
 
     virtual void onOtherMoved() {}
 
+    static constexpr int pointSize = 5;
+    static constexpr int pointRadius = pointSize / 2;
+
+    static constexpr int lineSize = 1;
 
 signals:
     void moved();

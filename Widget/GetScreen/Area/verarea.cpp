@@ -8,8 +8,10 @@ VerArea::VerArea(Type type, int *pY, int *pX1, int *pX2, QWidget *parent)
 {
     if(type == Point) {
         limitSize(this, 5, 5);
+        startY = pointRadius;
     }
     else {
+        startY = 0;
         limitHeight(this, 1);
     }
     setCursor(Qt::SizeVerCursor);
@@ -17,8 +19,8 @@ VerArea::VerArea(Type type, int *pY, int *pX1, int *pX2, QWidget *parent)
 
 void VerArea::onOtherMoved() {
     if(type == Point) {
-        int toX = (*pX1 + *pX2) / 2 - 2;
-        int toY = *pY - 2;
+        int toX = (*pX1 + *pX2) / 2 - pointRadius;
+        int toY = *pY - pointRadius;
         move(toX, toY);
     }
     else {
@@ -30,17 +32,22 @@ void VerArea::onOtherMoved() {
 }
 
 
+void VerArea::onMouseMoving(int y) {
+    int yOffset = y - startY;
+    *pY += yOffset;
+    emit moved();
+}
+
+
 void VerArea::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
-        startY = ev->y();
+        onMouseMoving(ev->y());
     }
 }
 
 void VerArea::mouseMoveEvent(QMouseEvent *ev) {
     if(ev->buttons() & Qt::LeftButton) {
-        int yOffset = ev->y() - startY;
-        *pY += yOffset;
-        emit moved();
+        onMouseMoving(ev->y());
     }
 }
 

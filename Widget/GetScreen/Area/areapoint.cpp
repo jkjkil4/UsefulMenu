@@ -8,41 +8,44 @@ AreaPoint::AreaPoint(int *x, int *y, QWidget *parent)
     : AreaParent(parent),
       pX(x), pY(y)
 {
-    limitSize(this, 5, 5);
+    limitSize(this, pointSize, pointSize);
 }
 
 void AreaPoint::onOtherMoved() {
-    int toX = (pX ? *pX - 2 : x());
-    int toY = (pY ? *pY - 2 : y());
+    int toX = (pX ? *pX - pointRadius : x());
+    int toY = (pY ? *pY - pointRadius : y());
     move(toX, toY);
+}
+
+
+void AreaPoint::onMouseMoving(QPoint pos) {
+    bool isMoved = false;
+
+    if(pX) {
+        int xOffset = pos.x() - startPos.x();
+        *pX += xOffset;
+        isMoved = true;
+    }
+    if(pY) {
+        int yOffset = pos.y() - startPos.y();
+        *pY += yOffset;
+        isMoved = true;
+    }
+
+    if(isMoved)
+        emit moved();
 }
 
 
 void AreaPoint::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
-        startPos = ev->pos();
+        onMouseMoving(ev->pos());
     }
 }
 
 void AreaPoint::mouseMoveEvent(QMouseEvent *ev) {
-    QPoint pos = ev->pos();
-
     if(ev->buttons() & Qt::LeftButton) {
-        bool isMoved = false;
-
-        if(pX) {
-            int xOffset = pos.x() - startPos.x();
-            *pX += xOffset;
-            isMoved = true;
-        }
-        if(pY) {
-            int yOffset = pos.y() - startPos.y();
-            *pY += yOffset;
-            isMoved = true;
-        }
-
-        if(isMoved)
-            emit moved();
+        onMouseMoving(ev->pos());
     }
 }
 

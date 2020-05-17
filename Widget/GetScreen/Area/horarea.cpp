@@ -7,9 +7,11 @@ HorArea::HorArea(Type type, int *pX, int *pY1, int *pY2, QWidget *parent)
       type(type), pX(pX), pY1(pY1), pY2(pY2)
 {
     if(type == Point) {
+        startX = pointRadius;
         limitSize(this, 5, 5);
     }
     else {
+        startX = 0;
         limitWidth(this, 1);
     }
     setCursor(Qt::SizeHorCursor);
@@ -17,8 +19,8 @@ HorArea::HorArea(Type type, int *pX, int *pY1, int *pY2, QWidget *parent)
 
 void HorArea::onOtherMoved() {
     if(type == Point) {
-        int toX = *pX - 2;
-        int toY = (*pY1 + *pY2) / 2 - 2;
+        int toX = *pX - pointRadius;
+        int toY = (*pY1 + *pY2) / 2 - pointRadius;
         move(toX, toY);
     }
     else {
@@ -30,17 +32,22 @@ void HorArea::onOtherMoved() {
 }
 
 
+void HorArea::onMouseMoving(int x) {
+    int xOffset = x - startX;
+    *pX += xOffset;
+    emit moved();
+}
+
+
 void HorArea::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
-        startX = ev->x();
+        onMouseMoving(ev->x());
     }
 }
 
 void HorArea::mouseMoveEvent(QMouseEvent *ev) {
     if(ev->buttons() & Qt::LeftButton) {
-        int xOffset = ev->x() - startX;
-        *pX += xOffset;
-        emit moved();
+        onMouseMoving(ev->x());
     }
 }
 

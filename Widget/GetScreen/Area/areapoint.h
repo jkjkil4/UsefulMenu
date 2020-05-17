@@ -16,12 +16,14 @@ public:
     explicit AreaPoint(int *x, int *y, QWidget *parent = nullptr);
     ~AreaPoint() override = default;
 
+    void onMouseMoving(QPoint pos);
+
     void onOtherMoved() override;
 
     int *pX = nullptr, *pY = nullptr;
 
 private:
-    QPoint startPos;
+    QPoint startPos = QPoint(pointRadius, pointRadius);
 };
 
 #endif // AREAPOINT_H

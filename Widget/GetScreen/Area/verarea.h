@@ -12,10 +12,10 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 public:
-    enum Type {Point, Line};
-
     explicit VerArea(Type type, int *pY, int *pX1, int *pX2, QWidget *parent = nullptr);
     ~VerArea() override = default;
+
+    void onMouseMoving(int y);
 
     void onOtherMoved() override;
 
