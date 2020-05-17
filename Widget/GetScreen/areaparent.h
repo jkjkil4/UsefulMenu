@@ -9,13 +9,11 @@ class AreaParent : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AreaParent(int *x, int *y, QWidget *parent = nullptr)
-        : QWidget(parent), pX(x), pY(y){}
+    explicit AreaParent(QWidget *parent = nullptr)
+        : QWidget(parent){}
     ~AreaParent() override = default;
 
     virtual void onOtherMoved() {}
-
-    int *pX = nullptr, *pY = nullptr;
 
 
 signals:

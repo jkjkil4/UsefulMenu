@@ -1,11 +1,10 @@
-#ifndef AREAPOINT_H
-#define AREAPOINT_H
+#ifndef VERAREAPOINT_H
+#define VERAREAPOINT_H
 
 #include "areaparent.h"
 
-class AreaPoint : public AreaParent
+class VerAreaPoint : public AreaParent
 {
-    Q_OBJECT
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
@@ -13,15 +12,14 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 public:
-    explicit AreaPoint(int *x, int *y, QWidget *parent = nullptr);
-    ~AreaPoint() override = default;
+    explicit VerAreaPoint(int *pY, int *pX1, int *pX2, QWidget *parent = nullptr);
 
     void onOtherMoved() override;
 
-    int *pX = nullptr, *pY = nullptr;
+    int *pY = nullptr, *pX1 = nullptr, *pX2 = nullptr;
 
 private:
-    QPoint startPos;
+    int startY = 0;
 };
 
-#endif // AREAPOINT_H
+#endif // VERAREAPOINT_H

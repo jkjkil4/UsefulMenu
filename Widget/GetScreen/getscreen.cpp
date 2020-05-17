@@ -1,11 +1,21 @@
 #include "getscreen.h"
 
-#include "arealine.h"
 #include "areapoint.h"
+#include "horareapoint.h"
+#include "verareapoint.h"
 
 GetScreen::GetScreen(QImage *img)
     : img(img)
 {
+    //左侧的点
+    areaWidgets.push_back(new HorAreaPoint(&area.x1, &area.y1, &area.y2, this));
+    //右侧的点
+    areaWidgets.push_back(new HorAreaPoint(&area.x2, &area.y1, &area.y2, this));
+    //上方的点
+    areaWidgets.push_back(new VerAreaPoint(&area.y1, &area.x1, &area.x2, this));
+    //下方的点
+    areaWidgets.push_back(new VerAreaPoint(&area.y2, &area.x1, &area.x2, this));
+
     //左上角
     areaPoints.push_back(new AreaPoint(&area.x1, &area.y1, this));
     //右上角
@@ -15,13 +25,17 @@ GetScreen::GetScreen(QImage *img)
     //右下角
     areaPoints.push_back(new AreaPoint(&area.x2, &area.y2, this));
 
-    for(auto controler : areaPoints) {
+    for(auto point : areaPoints)
+        areaWidgets.push_back(point);
+
+    for(auto controler : areaWidgets) {
         connect(controler, SIGNAL(moved()), this, SLOT(onAreaChanged()));
         connect(controler, SIGNAL(released()), this, SLOT(onAreaChangeDone()));
     }
 
     changeArea->setSingleShot(true);
     connect(changeArea, SIGNAL(timeout()), this, SLOT(onChangeAreaTimeout()));
+
 
     //设置窗口属性
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::SubWindow | Qt::FramelessWindowHint);
@@ -33,7 +47,7 @@ GetScreen::GetScreen(QImage *img)
 }
 
 GetScreen::~GetScreen() {
-    for(auto controler : areaPoints)
+    for(auto controler : areaWidgets)
         delete controler;
 }
 
@@ -51,8 +65,9 @@ void GetScreen::onAreaChanged() {
         changeArea->start(16);
 }
 void GetScreen::onChangeAreaTimeout() {
-    for(auto point : areaPoints)
+    for(auto point : areaWidgets)
         point->onOtherMoved();
+    //update();
 }
 
 void GetScreen::onAreaChangeDone() {
@@ -69,7 +84,7 @@ void GetScreen::onAreaChangeDone() {
 
 
 void GetScreen::setControlerVisible(bool on) {
-    for(auto controler : areaPoints)
+    for(auto controler : areaWidgets)
         controler->setVisible(on);
 }
 

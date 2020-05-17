@@ -7,6 +7,7 @@
 
 #include <QTimer>
 
+class AreaParent;
 class AreaPoint;
 
 inline QImage getScreenImage() {
@@ -48,8 +49,8 @@ public slots:
 private:
     QImage *img = nullptr;
 
+    QVector<AreaParent*> areaWidgets;
     QVector<AreaPoint*> areaPoints;
-    //QVector<Area>
 
     QTimer *changeArea = new QTimer(this);
 };

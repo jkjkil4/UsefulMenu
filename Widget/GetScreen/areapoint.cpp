@@ -5,7 +5,8 @@
 #include <QDebug>
 
 AreaPoint::AreaPoint(int *x, int *y, QWidget *parent)
-    : AreaParent(x, y, parent)
+    : AreaParent(parent),
+      pX(x), pY(y)
 {
     limitSize(this, 5, 5);
 }

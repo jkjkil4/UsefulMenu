@@ -1,7 +1,7 @@
 #include "arealine.h"
 
-AreaLine::AreaLine(int *x, int *y, QWidget *parent)
-    : AreaParent(x, y, parent)
+AreaLine::AreaLine(QWidget *parent)
+    : AreaParent(parent)
 {
 
 }

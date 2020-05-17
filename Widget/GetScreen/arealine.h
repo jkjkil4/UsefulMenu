@@ -8,7 +8,7 @@ class AreaLine : public AreaParent
 {
     Q_OBJECT
 public:
-    explicit AreaLine(int *x, int *y, QWidget *parent = nullptr);
+    explicit AreaLine(QWidget *parent = nullptr);
     ~AreaLine() override = default;
 
     void onOtherMoved() override;
