@@ -27,12 +27,12 @@ CONFIG += c++11
 
 SOURCES += \
         Class/iconbtn.cpp \
-        Widget/GetScreen/areapoint.cpp \
+        Widget/GetScreen/Area/areapoint.cpp \
+        Widget/GetScreen/Area/horarealine.cpp \
+        Widget/GetScreen/Area/horareapoint.cpp \
+        Widget/GetScreen/Area/verarealine.cpp \
+        Widget/GetScreen/Area/verareapoint.cpp \
         Widget/GetScreen/getscreen.cpp \
-        Widget/GetScreen/horarealine.cpp \
-        Widget/GetScreen/horareapoint.cpp \
-        Widget/GetScreen/verarealine.cpp \
-        Widget/GetScreen/verareapoint.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
         main.cpp \
@@ -41,13 +41,13 @@ SOURCES += \
 
 HEADERS += \
         Class/iconbtn.h \
-        Widget/GetScreen/areaparent.h \
-        Widget/GetScreen/areapoint.h \
+        Widget/GetScreen/Area/areaparent.h \
+        Widget/GetScreen/Area/areapoint.h \
+        Widget/GetScreen/Area/horarealine.h \
+        Widget/GetScreen/Area/horareapoint.h \
+        Widget/GetScreen/Area/verarealine.h \
+        Widget/GetScreen/Area/verareapoint.h \
         Widget/GetScreen/getscreen.h \
-        Widget/GetScreen/horarealine.h \
-        Widget/GetScreen/horareapoint.h \
-        Widget/GetScreen/verarealine.h \
-        Widget/GetScreen/verareapoint.h \
         Widget/ball.h \
         Class/global.h \
         Class/rammonitor.h \

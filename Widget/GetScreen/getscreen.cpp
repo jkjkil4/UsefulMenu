@@ -1,8 +1,8 @@
 #include "getscreen.h"
 
-#include "areapoint.h"
-#include "horareapoint.h"
-#include "verareapoint.h"
+#include "Area/areapoint.h"
+#include "Area/horareapoint.h"
+#include "Area/verareapoint.h"
 
 GetScreen::GetScreen(QImage *img)
     : img(img)
