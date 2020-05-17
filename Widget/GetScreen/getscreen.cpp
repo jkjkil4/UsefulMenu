@@ -1,20 +1,29 @@
 #include "getscreen.h"
 
 #include "Area/areapoint.h"
-#include "Area/horareapoint.h"
-#include "Area/verareapoint.h"
+#include "Area/horarea.h"
+#include "Area/verarea.h"
 
 GetScreen::GetScreen(QImage *img)
     : img(img)
 {
     //左侧的点
-    areaWidgets.push_back(new HorAreaPoint(&area.x1, &area.y1, &area.y2, this));
+    areaWidgets.push_back(new HorArea(HorArea::Point, &area.x1, &area.y1, &area.y2, this));
     //右侧的点
-    areaWidgets.push_back(new HorAreaPoint(&area.x2, &area.y1, &area.y2, this));
+    areaWidgets.push_back(new HorArea(HorArea::Point, &area.x2, &area.y1, &area.y2, this));
     //上方的点
-    areaWidgets.push_back(new VerAreaPoint(&area.y1, &area.x1, &area.x2, this));
+    areaWidgets.push_back(new VerArea(VerArea::Point, &area.y1, &area.x1, &area.x2, this));
     //下方的点
-    areaWidgets.push_back(new VerAreaPoint(&area.y2, &area.x1, &area.x2, this));
+    areaWidgets.push_back(new VerArea(VerArea::Point, &area.y2, &area.x1, &area.x2, this));
+
+    //左侧的线
+    areaWidgets.push_back(new HorArea(HorArea::Line, &area.x1, &area.y1, &area.y2, this));
+    //右侧的线
+    areaWidgets.push_back(new HorArea(HorArea::Line, &area.x2, &area.y1, &area.y2, this));
+    //上方的线
+    areaWidgets.push_back(new VerArea(VerArea::Line, &area.y1, &area.x1, &area.x2, this));
+    //下方的线
+    areaWidgets.push_back(new VerArea(VerArea::Line, &area.y2, &area.x1, &area.x2, this));
 
     //左上角
     areaPoints.push_back(new AreaPoint(&area.x1, &area.y1, this));
@@ -32,6 +41,7 @@ GetScreen::GetScreen(QImage *img)
         connect(controler, SIGNAL(moved()), this, SLOT(onAreaChanged()));
         connect(controler, SIGNAL(released()), this, SLOT(onAreaChangeDone()));
     }
+    onAreaChanged();
 
     changeArea->setSingleShot(true);
     connect(changeArea, SIGNAL(timeout()), this, SLOT(onChangeAreaTimeout()));
@@ -60,7 +70,14 @@ QCursor GetScreen::getCursorType(int flags) {
 
 
 void GetScreen::onAreaChanged() {
-    ((AreaParent*)sender())->onOtherMoved();
+    area.x1 = qBound(0, area.x1, img->width() - 1);
+    area.x2 = qBound(0, area.x2, img->width() - 1);
+    area.y1 = qBound(0, area.y1, img->height() - 1);
+    area.y2 = qBound(0, area.y2, img->height() - 1);
+
+    AreaParent *pSender = (AreaParent*)sender();
+    if(pSender)
+        pSender->onOtherMoved();
     if(!changeArea->isActive())
         changeArea->start(16);
 }

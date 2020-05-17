@@ -3,7 +3,7 @@
 
 #include "areaparent.h"
 
-class HorAreaPoint : public AreaParent
+class HorArea : public AreaParent
 {
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
@@ -12,11 +12,14 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 public:
-    explicit HorAreaPoint(int *pX, int *pY1, int *pY2, QWidget *parent = nullptr);
-    ~HorAreaPoint() override = default;
+    enum Type {Point, Line};
+
+    explicit HorArea(Type type, int *pX, int *pY1, int *pY2, QWidget *parent = nullptr);
+    ~HorArea() override = default;
 
     void onOtherMoved() override;
-    \
+
+    Type type;
     int *pX = nullptr, *pY1 = nullptr, *pY2 = nullptr;
 
 private:

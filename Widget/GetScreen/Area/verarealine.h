@@ -7,6 +7,7 @@ class VerAreaLine : public AreaParent
 {
 public:
     VerAreaLine();
+    ~VerAreaLine() override = default;
 };
 
 #endif // VERAREALINE_H

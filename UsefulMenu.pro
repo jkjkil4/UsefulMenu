@@ -28,10 +28,8 @@ CONFIG += c++11
 SOURCES += \
         Class/iconbtn.cpp \
         Widget/GetScreen/Area/areapoint.cpp \
-        Widget/GetScreen/Area/horarealine.cpp \
-        Widget/GetScreen/Area/horareapoint.cpp \
-        Widget/GetScreen/Area/verarealine.cpp \
-        Widget/GetScreen/Area/verareapoint.cpp \
+        Widget/GetScreen/Area/horarea.cpp \
+        Widget/GetScreen/Area/verarea.cpp \
         Widget/GetScreen/getscreen.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
@@ -43,10 +41,8 @@ HEADERS += \
         Class/iconbtn.h \
         Widget/GetScreen/Area/areaparent.h \
         Widget/GetScreen/Area/areapoint.h \
-        Widget/GetScreen/Area/horarealine.h \
-        Widget/GetScreen/Area/horareapoint.h \
-        Widget/GetScreen/Area/verarealine.h \
-        Widget/GetScreen/Area/verareapoint.h \
+        Widget/GetScreen/Area/horarea.h \
+        Widget/GetScreen/Area/verarea.h \
         Widget/GetScreen/getscreen.h \
         Widget/ball.h \
         Class/global.h \

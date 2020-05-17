@@ -3,7 +3,7 @@
 
 #include "areaparent.h"
 
-class VerAreaPoint : public AreaParent
+class VerArea : public AreaParent
 {
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
@@ -12,10 +12,14 @@ protected:
     void paintEvent(QPaintEvent *) override;
 
 public:
-    explicit VerAreaPoint(int *pY, int *pX1, int *pX2, QWidget *parent = nullptr);
+    enum Type {Point, Line};
+
+    explicit VerArea(Type type, int *pY, int *pX1, int *pX2, QWidget *parent = nullptr);
+    ~VerArea() override = default;
 
     void onOtherMoved() override;
 
+    Type type;
     int *pY = nullptr, *pX1 = nullptr, *pX2 = nullptr;
 
 private:
