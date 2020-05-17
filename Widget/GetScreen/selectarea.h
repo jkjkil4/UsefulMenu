@@ -10,6 +10,7 @@ class SelectArea : public QWidget
     Q_OBJECT
 public:
     explicit SelectArea(QWidget *parent = nullptr);
+    ~SelectArea() override = default;
 
     VARIBLE_FUNC(PointSize, pointSize, int)
     VARIBLE_FUNC(LineSize, lineSize, int)

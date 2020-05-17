@@ -9,14 +9,14 @@ class Ball : public QWidget
 {
     Q_OBJECT
 protected:
-    void mousePressEvent(QMouseEvent *ev);
-    void mouseMoveEvent(QMouseEvent *ev);
-    void mouseReleaseEvent(QMouseEvent *ev);
-    void paintEvent(QPaintEvent *);
+    void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void paintEvent(QPaintEvent *) override;
 
 public:
     explicit Ball(QWidget *parent = nullptr);
-    ~Ball() = default;
+    ~Ball() override = default;
 
 signals:
     void wndShowNarrow();

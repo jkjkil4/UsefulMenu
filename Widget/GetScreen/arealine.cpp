@@ -1,6 +1,11 @@
 #include "arealine.h"
 
-AreaLine::AreaLine(QWidget *parent) : QWidget(parent)
+AreaLine::AreaLine(int *x, int *y, QWidget *parent)
+    : AreaParent(x, y, parent)
 {
+
+}
+
+void AreaLine::onOtherMoved() {
 
 }

@@ -2,16 +2,16 @@
 #define AREALINE_H
 
 #include <QWidget>
+#include "areaparent.h"
 
-class AreaLine : public QWidget
+class AreaLine : public AreaParent
 {
     Q_OBJECT
 public:
-    explicit AreaLine(QWidget *parent = nullptr);
+    explicit AreaLine(int *x, int *y, QWidget *parent = nullptr);
+    ~AreaLine() override = default;
 
-signals:
-
-public slots:
+    void onOtherMoved() override;
 };
 
 #endif // AREALINE_H

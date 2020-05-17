@@ -6,6 +6,8 @@
 #include "Widget/ball.h"
 #include "Widget/btnlist.h"
 
+#include "Widget/GetScreen/getscreen.h"
+
 #include "Class/iconbtn.h"
 
 #include "Class/global.h"
@@ -25,10 +27,12 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     IconBtn *btnGetScreen = new IconBtn(btnList);
     btnGetScreen->setIcon(QIcon(":/funcBtn/Resource/cut.png"));
     limitSize(btnGetScreen, 20, 20);
+    connect(btnGetScreen, SIGNAL(clicked()), this, SLOT(onGetScreen()));
     //
     IconBtn *btnShortcut = new IconBtn(btnList);
     btnShortcut->setIcon(QIcon(":/funcBtn/Resource/fast.png"));
     limitSize(btnShortcut, 20, 20);
+    connect(btnShortcut, SIGNAL(clicked()), this, SLOT(onShowShortcut()));
 
     btnList->updateChildsPos();
     maxHeight = btnList->getSuitableHeight() + btnList->y();
@@ -69,10 +73,6 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     ball->setMouseTracking(true);
 }
 
-Widget::~Widget() {
-
-}
-
 
 void Widget::showNarrow() {
     limitSize(this, 32, 32);
@@ -89,6 +89,17 @@ void Widget::onCheckMouse() {
         showNarrow();
         checkMouse->stop();
     }
+}
+
+void Widget::onGetScreen() {
+    QImage img = getScreenImage();
+
+    GetScreen getScreen(&img);
+    getScreen.exec();
+}
+
+void Widget::onShowShortcut() {
+
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *) {

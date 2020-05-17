@@ -8,10 +8,11 @@
 class IconBtn : public QAbstractButton
 {
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 public:
     explicit IconBtn(QWidget *parent = nullptr);
+    ~IconBtn() override = default;
 
     bool checkMouseAt();
 

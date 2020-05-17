@@ -1,17 +1,25 @@
 #ifndef AREAPOINT_H
 #define AREAPOINT_H
 
-#include <QWidget>
+#include "areaparent.h"
 
-class AreaPoint : public QWidget
+class AreaPoint : public AreaParent
 {
     Q_OBJECT
+protected:
+    void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void paintEvent(QPaintEvent *) override;
+
 public:
-    explicit AreaPoint(QWidget *parent = nullptr);
+    explicit AreaPoint(int *x, int *y, QWidget *parent = nullptr);
+    ~AreaPoint() override = default;
 
-signals:
+    void onOtherMoved() override;
 
-public slots:
+private:
+    QPoint startPos;
 };
 
 #endif // AREAPOINT_H

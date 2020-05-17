@@ -9,11 +9,11 @@ class BtnList : public QWidget
 {
     Q_OBJECT
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 public:
     explicit BtnList(QWidget *parent = nullptr);
-    ~BtnList() = default;
+    ~BtnList() override = default;
 
     void updateChildsPos();
 
