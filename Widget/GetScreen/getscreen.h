@@ -53,6 +53,8 @@ private:
     QVector<AreaPoint*> areaPoints;
 
     QTimer *changeArea = new QTimer(this);
+
+    QRect cutRect;
 };
 
 #endif // GETSCREEN_H

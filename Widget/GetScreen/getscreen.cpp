@@ -4,6 +4,8 @@
 #include "Area/horarea.h"
 #include "Area/verarea.h"
 
+#include <QDebug>
+
 GetScreen::GetScreen(QImage *img)
     : img(img)
 {
@@ -84,6 +86,9 @@ void GetScreen::onAreaChanged() {
 void GetScreen::onChangeAreaTimeout() {
     for(auto point : areaWidgets)
         point->onOtherMoved();
+
+    cutRect = QRect(QPoint(area.x1, area.y1), QPoint(area.x2, area.y2)).normalized();
+
     update();
 }
 
@@ -110,6 +115,11 @@ void GetScreen::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.drawImage(0, 0, *img);
 
+    p.setPen(QColor(0, 0, 0, 0));
     p.setBrush(QColor(0, 0, 0, 128));
-    p.drawRect(0, 0, width(), height());
+
+    QRegion region = QRegion(0, 0, width(), height()) - cutRect;
+
+    for(auto rect : region)
+        p.drawRect(rect);
 }

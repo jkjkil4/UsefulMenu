@@ -90,7 +90,7 @@ void Widget::onCheckMouse() {
         checkMouse->stop();
     }
 }
-
+#include <QTime>
 void Widget::onGetScreen() {
     QImage img = getScreenImage();
 

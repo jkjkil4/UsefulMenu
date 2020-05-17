@@ -20,8 +20,6 @@ public:
     static constexpr int pointSize = 5;
     static constexpr int pointRadius = pointSize / 2;
 
-    static constexpr int lineSize = 1;
-
 signals:
     void moved();
     void released();
