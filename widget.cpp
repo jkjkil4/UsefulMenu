@@ -90,9 +90,17 @@ void Widget::onCheckMouse() {
         checkMouse->stop();
     }
 }
-#include <QTime>
+
 void Widget::onGetScreen() {
+#ifdef TIME_DEBUG
+    TIME_BEGIN;
+#endif
+
     QImage img = getScreenImage();
+
+#ifdef TIME_DEBUG
+    TIME_OUTPUT("截图消耗时间:");
+#endif
 
     GetScreen getScreen(&img);
     getScreen.exec();

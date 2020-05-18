@@ -18,6 +18,9 @@ class GetScreen : public QDialog
 {
     Q_OBJECT
 protected:
+    void mousePressEvent(QMouseEvent *ev) override;
+    void mouseMoveEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
     void paintEvent(QPaintEvent *) override;
 
 private:
@@ -55,6 +58,8 @@ private:
     QTimer *changeArea = new QTimer(this);
 
     QRect cutRect;
+
+    bool isFirstMove = true;
 };
 
 #endif // GETSCREEN_H

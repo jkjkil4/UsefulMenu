@@ -9,6 +9,13 @@
     varibleType get##FuncName(){return varibleName;}\
     void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
 
+#define TIME_DEBUG
+#ifdef TIME_DEBUG
+# include <QTime>
+# define TIME_BEGIN QTime _t_;_t_.start();
+# define TIME_OUTPUT(str) qDebug().noquote() << str << _t_.elapsed()
+# define TIME_RESTART _t_.restart();
+#endif
 
 template<typename T>inline void safeDelete(T *&p) {
     if(p) {

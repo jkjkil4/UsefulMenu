@@ -4,6 +4,7 @@
 #include "Area/horarea.h"
 #include "Area/verarea.h"
 
+#include <QMouseEvent>
 #include <QDebug>
 
 GetScreen::GetScreen(QImage *img)
@@ -40,6 +41,7 @@ GetScreen::GetScreen(QImage *img)
         areaWidgets.push_back(point);
 
     for(auto controler : areaWidgets) {
+        controler->setVisible(false);
         connect(controler, SIGNAL(moved()), this, SLOT(onAreaChanged()));
         connect(controler, SIGNAL(released()), this, SLOT(onAreaChangeDone()));
     }
@@ -72,10 +74,10 @@ QCursor GetScreen::getCursorType(int flags) {
 
 
 void GetScreen::onAreaChanged() {
-//    area.x1 = qBound(0, area.x1, img->width());
-//    area.x2 = qBound(0, area.x2, img->width());
-//    area.y1 = qBound(0, area.y1, img->height());
-//    area.y2 = qBound(0, area.y2, img->height());
+    area.x1 = qBound(0, area.x1, img->width() - 1);
+    area.x2 = qBound(0, area.x2, img->width() - 1);
+    area.y1 = qBound(0, area.y1, img->height() - 1);
+    area.y2 = qBound(0, area.y2, img->height() - 1);
 
     AreaParent *pSender = (AreaParent*)sender();
     if(pSender)
@@ -95,8 +97,7 @@ void GetScreen::onChangeAreaTimeout() {
 void GetScreen::onAreaChangeDone() {
     int *left = (area.x1 < area.x2 ? &area.x1 : &area.x2);
     int *top = (area.y1 < area.y2 ? &area.y1 : &area.y2);
-    QPoint leftTop(qMin(area.x1, area.x2), qMin(area.y1, area.y2));
-    QPoint rightBottom(qMax(area.x1, area.x2), qMax(area.y1, area.y2));
+
     for(auto point : areaPoints) {
         int flags = (point->pX == left ? Qt::AlignLeft : Qt::AlignRight);
         flags |= (point->pY == top ? Qt::AlignTop : Qt::AlignBottom);
@@ -111,11 +112,46 @@ void GetScreen::setControlerVisible(bool on) {
 }
 
 
+void GetScreen::mousePressEvent(QMouseEvent *ev) {
+    if(ev->button() == Qt::LeftButton) {
+        if(isFirstMove) {
+            QPoint pos = ev->pos();
+            //这是区域的位置
+            area.x1 = pos.x();
+            area.y1 = pos.y();
+            area.x2 = pos.x();
+            area.y2 = pos.y();
+            //显示
+            onAreaChanged();
+            onAreaChangeDone();
+            setControlerVisible(true);
+        }
+    }
+}
+
+void GetScreen::mouseMoveEvent(QMouseEvent *ev) {
+    if(ev->buttons() & Qt::LeftButton) {
+        if(isFirstMove) {
+            QPoint pos = ev->pos();
+            area.x2 = pos.x();
+            area.y2 = pos.y();
+            onAreaChanged();
+        }
+    }
+}
+
+void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
+    if(ev->button() == Qt::LeftButton) {
+        isFirstMove = false;
+    }
+}
+
+
 void GetScreen::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.drawImage(0, 0, *img);
 
-    p.setPen(QColor(0, 0, 0, 0));
+    p.setPen(Qt::NoPen);
     p.setBrush(QColor(0, 0, 0, 128));
 
     QRegion region = QRegion(0, 0, width(), height()) - cutRect;
