@@ -12,6 +12,7 @@ protected:
 
 public:
     explicit IconBtn(QWidget *parent = nullptr);
+    explicit IconBtn(QIcon icon, QWidget *parent = nullptr);
     ~IconBtn() override = default;
 
     bool checkMouseAt();

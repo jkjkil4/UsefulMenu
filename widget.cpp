@@ -26,12 +26,10 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     //功能列表的按钮
     IconBtn *btnGetScreen = new IconBtn(btnList);
     btnGetScreen->setIcon(QIcon(":/funcBtn/Resource/cut.png"));
-    limitSize(btnGetScreen, 20, 20);
     connect(btnGetScreen, SIGNAL(clicked()), this, SLOT(onGetScreen()));
     //
     IconBtn *btnShortcut = new IconBtn(btnList);
     btnShortcut->setIcon(QIcon(":/funcBtn/Resource/fast.png"));
-    limitSize(btnShortcut, 20, 20);
     connect(btnShortcut, SIGNAL(clicked()), this, SLOT(onShowShortcut()));
 
     btnList->updateChildsPos();

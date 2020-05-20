@@ -1,7 +1,7 @@
 #include "line.h"
 
-Line::Line(Qt::Orientation ori, QWidget *parent)
-    : QWidget(parent)
+Line::Line(Qt::Orientation ori, QColor color, QWidget *parent)
+    : QWidget(parent), color(color)
 {
     switch((int)ori) {
     case Qt::Horizontal:
@@ -16,5 +16,5 @@ Line::Line(Qt::Orientation ori, QWidget *parent)
 void Line::paintEvent(QPaintEvent *) {
     QPainter p(this);
 
-    p.fillRect(0, 0, width(), height(), )
+    p.fillRect(0, 0, width(), height(), color);
 }

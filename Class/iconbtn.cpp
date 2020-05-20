@@ -3,8 +3,17 @@
 #include <QPainter>
 #include <QDebug>
 
-IconBtn::IconBtn(QWidget *parent) : QAbstractButton(parent) {
+IconBtn::IconBtn(QWidget *parent)
+    : QAbstractButton(parent)
+{
+    limitSize(this, 20, 20);
+}
 
+IconBtn::IconBtn(QIcon icon, QWidget *parent)
+    : QAbstractButton(parent)
+{
+    limitSize(this, 20, 20);
+    setIcon(icon);
 }
 
 bool IconBtn::checkMouseAt() {

@@ -1,7 +1,5 @@
 #include "buttonmenu.h"
 
-#include "Class/iconbtn.h"
-#include "Class/line.h"
 
 ButtonMenu::ButtonMenu(QWidget *parent) : QWidget(parent)
 {
@@ -10,10 +8,20 @@ ButtonMenu::ButtonMenu(QWidget *parent) : QWidget(parent)
 }
 
 
-void ButtonMenu::addWidget(QWidget *btn) {
-    layout->addWidget(btn);
+void ButtonMenu::addWidget(QWidget *w) {
+    layout->addWidget(w);
 }
 
-void ButtonMenu::addLine() {
-    layout->addWidget(new Line(Qt::Horizontal));
+void ButtonMenu::setMargin(int margin) {
+    layout->setMargin(margin);
+}
+
+void ButtonMenu::setSpcing(int spacing) {
+    layout->setSpacing(spacing);
+}
+
+void ButtonMenu::paintEvent(QPaintEvent *) {
+    QPainter p(this);
+    p.fillRect(1, 1, width(), height(), bgColor);
+    jDrawRecFrame(&p, 0, 0, width(), height(), 1, bgColor.darker(140));
 }

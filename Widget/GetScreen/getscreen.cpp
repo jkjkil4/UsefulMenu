@@ -4,6 +4,11 @@
 #include "Area/horarea.h"
 #include "Area/verarea.h"
 
+#include "ButtonMenu/buttonmenu.h"
+
+#include "Class/iconbtn.h"
+#include "Class/line.h"
+
 #include <QMouseEvent>
 #include <QDebug>
 
@@ -50,6 +55,17 @@ GetScreen::GetScreen(QImage *img)
     changeArea->setSingleShot(true);
     connect(changeArea, SIGNAL(timeout()), this, SLOT(onChangeAreaTimeout()));
 
+    //按钮菜单
+    btnMenu = new ButtonMenu(this);
+    btnMenu->setBgColor(QColor(230, 230, 230));
+    btnMenu->setMargin(5);
+    btnMenu->setSpcing(3);
+    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png")));
+    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/save2.png")));
+    btnMenu->addWidget(new Line(Qt::Vertical));
+    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/cancel.png")));
+    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/accept.png")));
+    //btnMenu->adjustSize();
 
     //设置窗口属性
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::SubWindow | Qt::FramelessWindowHint);
@@ -147,7 +163,7 @@ void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
 }
 
 
-void GetScreen::paintEvent(QPaintEvent *) {
+void GetScreen::paintEvent(QPaintEvent *ev) {
     QPainter p(this);
     p.drawImage(0, 0, *img);
 
@@ -158,4 +174,6 @@ void GetScreen::paintEvent(QPaintEvent *) {
 
     for(auto rect : region)
         p.drawRect(rect);
+
+    QDialog::paintEvent(ev);
 }

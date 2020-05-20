@@ -3,15 +3,21 @@
 
 #include <QWidget>
 
+#include "Class/global.h"
+
 class Line : public QWidget
 {
     Q_OBJECT
+protected:
+    void paintEvent(QPaintEvent *);
+
 public:
-    explicit Line(QWidget *parent = nullptr);
+    explicit Line(Qt::Orientation ori, QColor color = Qt::black, QWidget *parent = nullptr);
 
-signals:
+    VARIBLE_FUNC(Color, color, QColor)
 
-public slots:
+private:
+    QColor color;
 };
 
 #endif // LINE_H

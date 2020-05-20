@@ -10,6 +10,8 @@
 class AreaParent;
 class AreaPoint;
 
+class ButtonMenu;
+
 inline QImage getScreenImage() {
     return QApplication::primaryScreen()->grabWindow(0).toImage();
 }
@@ -21,7 +23,7 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
-    void paintEvent(QPaintEvent *) override;
+    void paintEvent(QPaintEvent *ev) override;
 
 private:
     struct Area
@@ -54,6 +56,8 @@ private:
 
     QVector<AreaParent*> areaWidgets;
     QVector<AreaPoint*> areaPoints;
+
+    ButtonMenu *btnMenu = nullptr;
 
     QTimer *changeArea = new QTimer(this);
 
