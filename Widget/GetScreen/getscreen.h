@@ -55,6 +55,11 @@ public slots:
     void onChangeAreaTimeout();
     void onAreaChangeDone();
 
+    void onBtnSavePressed();
+    void onBtnSaveAsPressed();
+    void onBtnCancelPressed();
+    void onBtnAcceptPressed();
+
 private:
     QImage *img = nullptr;
 

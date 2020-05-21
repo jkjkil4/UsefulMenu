@@ -21,12 +21,26 @@ GetScreen::GetScreen(QImage *img)
     btnMenu->setMargin(5);
     btnMenu->setSpcing(5);
 
-    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png")));
-    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/save2.png")));
+    IconBtn *btnSave = new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png"));
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(onBtnSavePressed()));
+    addBtn(btnMenu, btnSave);
+
+    IconBtn *btnSaveAs = new IconBtn(QIcon(":/getScreenBtn/Resource/save2.png"));
+    connect(btnSaveAs, SIGNAL(clicked()), this, SLOT(onBtnSaveAsPressed()));
+    addBtn(btnMenu, btnSaveAs);
+
     btnMenu->addWidget(new Line(Qt::Vertical));
-    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/cancel.png")));
-    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/accept.png")));
+
+    IconBtn *btnCancel = new IconBtn(QIcon(":/getScreenBtn/Resource/cancel.png"));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(onBtnCancelPressed()));
+    addBtn(btnMenu, btnCancel);
+
+    IconBtn *btnAccept = new IconBtn(QIcon(":/getScreenBtn/Resource/accept.png"));
+    connect(btnAccept, SIGNAL(clicked()), this, SLOT(onBtnAcceptPressed()));
+    addBtn(btnMenu, btnAccept);
+
     btnMenu->adjustSize();
+
 
     //左侧的点
     areaWidgets.push_back(new HorArea(HorArea::Point, &area.x1, &area.y1, &area.y2, this));
@@ -104,16 +118,16 @@ void GetScreen::onAreaChanged() {
     area.y1 = qBound(0, area.y1, img->height() - 1);
     area.y2 = qBound(0, area.y2, img->height() - 1);
 
+    if(btnMenu->isVisible())
+        btnMenu->myHide();
+
     AreaParent *pSender = (AreaParent*)sender();
     if(pSender)
         pSender->onOtherMoved();
     if(!changeArea->isActive())
-        changeArea->start(18);
+        changeArea->start(16);
 }
 void GetScreen::onChangeAreaTimeout() {
-    if(btnMenu->isVisible())
-        btnMenu->myHide();
-
     for(auto point : areaWidgets)
         point->onOtherMoved();
 
@@ -131,6 +145,23 @@ void GetScreen::onAreaChangeDone() {
         flags |= (point->pY == top ? Qt::AlignTop : Qt::AlignBottom);
         point->setCursor(getCursorType(flags));
     }
+}
+
+
+void GetScreen::onBtnSavePressed() {
+
+}
+
+void GetScreen::onBtnSaveAsPressed() {
+
+}
+
+void GetScreen::onBtnCancelPressed() {
+    close();
+}
+
+void GetScreen::onBtnAcceptPressed() {
+    close();
 }
 
 
