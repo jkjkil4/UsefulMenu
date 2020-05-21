@@ -43,18 +43,21 @@ void HorArea::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         onMouseMoving(ev->x());
     }
+    ev->ignore();
 }
 
 void HorArea::mouseMoveEvent(QMouseEvent *ev) {
     if(ev->buttons() & Qt::LeftButton) {
         onMouseMoving(ev->x());
     }
+    ev->ignore();
 }
 
 void HorArea::mouseReleaseEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         emit released();
     }
+    ev->ignore();
 }
 
 

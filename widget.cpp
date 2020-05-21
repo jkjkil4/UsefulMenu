@@ -94,7 +94,9 @@ void Widget::onGetScreen() {
     TIME_BEGIN;
 #endif
 
+    setVisible(false);
     QImage img = getScreenImage();
+    setVisible(true);
 
 #ifdef TIME_DEBUG
     TIME_OUTPUT("截图消耗时间:");

@@ -41,18 +41,21 @@ void AreaPoint::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         onMouseMoving(ev->pos());
     }
+    ev->ignore();
 }
 
 void AreaPoint::mouseMoveEvent(QMouseEvent *ev) {
     if(ev->buttons() & Qt::LeftButton) {
         onMouseMoving(ev->pos());
     }
+    ev->ignore();
 }
 
 void AreaPoint::mouseReleaseEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         emit released();
     }
+    ev->ignore();
 }
 
 void AreaPoint::paintEvent(QPaintEvent *) {

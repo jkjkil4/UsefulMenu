@@ -15,6 +15,19 @@
 GetScreen::GetScreen(QImage *img)
     : img(img)
 {
+    //按钮菜单
+    btnMenu = new ButtonMenu(this);
+    btnMenu->setBgColor(QColor(230, 230, 230));
+    btnMenu->setMargin(5);
+    btnMenu->setSpcing(5);
+
+    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png")));
+    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/save2.png")));
+    btnMenu->addWidget(new Line(Qt::Vertical));
+    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/cancel.png")));
+    addBtn(btnMenu, new IconBtn(QIcon(":/getScreenBtn/Resource/accept.png")));
+    btnMenu->adjustSize();
+
     //左侧的点
     areaWidgets.push_back(new HorArea(HorArea::Point, &area.x1, &area.y1, &area.y2, this));
     //右侧的点
@@ -55,22 +68,11 @@ GetScreen::GetScreen(QImage *img)
     changeArea->setSingleShot(true);
     connect(changeArea, SIGNAL(timeout()), this, SLOT(onChangeAreaTimeout()));
 
-    //按钮菜单
-    btnMenu = new ButtonMenu(this);
-    btnMenu->setBgColor(QColor(230, 230, 230));
-    btnMenu->setMargin(5);
-    btnMenu->setSpcing(3);
-    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png")));
-    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/save2.png")));
-    btnMenu->addWidget(new Line(Qt::Vertical));
-    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/cancel.png")));
-    btnMenu->addWidget(new IconBtn(QIcon(":/getScreenBtn/Resource/accept.png")));
-    //btnMenu->adjustSize();
 
     //设置窗口属性
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::SubWindow | Qt::FramelessWindowHint);
     //全屏
-    showFullScreen();
+    //showFullScreen();
     //设置大小
     resize(img->size());
     move(0, 0);
@@ -79,6 +81,13 @@ GetScreen::GetScreen(QImage *img)
 GetScreen::~GetScreen() {
     for(auto controler : areaWidgets)
         delete controler;
+}
+
+void GetScreen::addBtn(ButtonMenu *menu, IconBtn *btn) {
+    btn->setColorNormal(QColor(220, 220, 220));
+    btn->setColorMouseAt(QColor(230, 230, 230));
+    btn->setColorHolding(QColor(210, 210, 210));
+    menu->addWidget(btn);
 }
 
 
@@ -102,6 +111,9 @@ void GetScreen::onAreaChanged() {
         changeArea->start(18);
 }
 void GetScreen::onChangeAreaTimeout() {
+    if(btnMenu->isVisible())
+        btnMenu->myHide();
+
     for(auto point : areaWidgets)
         point->onOtherMoved();
 
@@ -158,12 +170,15 @@ void GetScreen::mouseMoveEvent(QMouseEvent *ev) {
 
 void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
-        isFirstMove = false;
+        if(isFirstMove){
+            isFirstMove = false;
+        }
+        btnMenu->myShow(QPoint(qMax(area.x1, area.x2), qMax(area.y1, area.y2)));
     }
 }
 
 
-void GetScreen::paintEvent(QPaintEvent *ev) {
+void GetScreen::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.drawImage(0, 0, *img);
 
@@ -175,5 +190,8 @@ void GetScreen::paintEvent(QPaintEvent *ev) {
     for(auto rect : region)
         p.drawRect(rect);
 
-    QDialog::paintEvent(ev);
+    //绘制放大的图像
+
+
+    //QDialog::paintEvent(ev);
 }

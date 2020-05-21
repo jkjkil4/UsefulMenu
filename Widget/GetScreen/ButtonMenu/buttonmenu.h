@@ -15,15 +15,22 @@ protected:
 public:
     explicit ButtonMenu(QWidget *parent = nullptr);
 
-    void addWidget(QWidget *w);
-    void setMargin(int margin);
-    void setSpcing(int spacing);
+    void addWidget(QWidget *w); //添加控件
+    void setMargin(int margin); //设置边缘空隙
+    void setSpcing(int spacing);//设置控件空隙
+
+    void myShow(QPoint pos);    //显示
+    void myHide();              //隐藏
 
     VARIBLE_FUNC(BgColor, bgColor, QColor)
+    VARIBLE_FUNC(AreaSpacing, areaSpacing, int)
 
 private:
-    QHBoxLayout *layout = nullptr;
-    QColor bgColor = Qt::lightGray;
+    QHBoxLayout *layout = nullptr;  //横向布局
+
+    QColor bgColor = Qt::lightGray; //背景颜色
+    int areaSpacing = 6;        //与area之间的空隙
+
 };
 
 #endif // BUTTONMENU_H

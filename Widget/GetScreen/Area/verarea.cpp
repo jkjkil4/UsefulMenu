@@ -43,18 +43,21 @@ void VerArea::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         onMouseMoving(ev->y());
     }
+    ev->ignore();
 }
 
 void VerArea::mouseMoveEvent(QMouseEvent *ev) {
     if(ev->buttons() & Qt::LeftButton) {
         onMouseMoving(ev->y());
     }
+    ev->ignore();
 }
 
 void VerArea::mouseReleaseEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         emit released();
     }
+    ev->ignore();
 }
 
 void VerArea::paintEvent(QPaintEvent *) {

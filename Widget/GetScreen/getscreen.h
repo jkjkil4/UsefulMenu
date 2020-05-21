@@ -12,6 +12,8 @@ class AreaPoint;
 
 class ButtonMenu;
 
+class IconBtn;
+
 inline QImage getScreenImage() {
     return QApplication::primaryScreen()->grabWindow(0).toImage();
 }
@@ -23,7 +25,7 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
-    void paintEvent(QPaintEvent *ev) override;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     struct Area
@@ -41,6 +43,8 @@ private:
 public:
     explicit GetScreen(QImage *img);
     ~GetScreen() override;
+
+    void addBtn(ButtonMenu *menu, IconBtn *btn);
 
     void setControlerVisible(bool on);
 
