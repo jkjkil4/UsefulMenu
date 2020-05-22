@@ -51,6 +51,9 @@ public:
 
    QCursor getCursorType(int flags);
 
+   QString getSaveFileName();
+   QString getMS();
+
 public slots:
     void onAreaChanged();
     void onChangeAreaTimeout();
@@ -74,6 +77,7 @@ private:
     ImgView *imgView = nullptr;
 
     //按钮菜单
+    IconBtn *btnSave = nullptr;
     ButtonMenu *btnMenu = nullptr;
 
     QTimer *changeArea = new QTimer(this);

@@ -13,6 +13,8 @@
 
 #include <QMouseEvent>
 #include <QDebug>
+#include <QMessageBox>
+#include <QDir>
 
 GetScreen::GetScreen(QImage *img)
     : img(img)
@@ -23,7 +25,7 @@ GetScreen::GetScreen(QImage *img)
     btnMenu->setMargin(5);
     btnMenu->setSpcing(5);
 
-    IconBtn *btnSave = new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png"));
+    btnSave = new IconBtn(QIcon(":/getScreenBtn/Resource/save1.png"));
     connect(btnSave, SIGNAL(clicked()), this, SLOT(onBtnSavePressed()));
     addBtn(btnMenu, btnSave);
 
@@ -121,6 +123,20 @@ QCursor GetScreen::getCursorType(int flags) {
 }
 
 
+QString GetScreen::getSaveFileName() {
+    //"jss" means "jScreenShot"
+    return "jss " + QDateTime(QDateTime::currentDateTime()).toString("yy-MM-dd hh-mm-ss-")
+             + getMS() + ".png";
+}
+
+QString GetScreen::getMS() {
+    QString ms = QString::number(QDateTime::currentDateTime().time().msec());
+    for( int i = 0; i < 3 - ms.length(); i++ )
+        ms.insert(0, "0");
+    return ms;
+}
+
+
 void GetScreen::onAreaChanged() {
     isAreaChanged = true;
     area.x1 = qBound(0, area.x1, img->width() - 1);
@@ -181,7 +197,20 @@ void GetScreen::onAreaChangeDone() {
 
 
 void GetScreen::onBtnSavePressed() {
+    QDir dir;
+    if(!dir.exists("screenShot"))
+        dir.mkdir("screenShot");
 
+    if(!cutRect.isValid()) {
+        QMessageBox::warning(this, "错误", "图像无效");
+    } else {
+        if(!img->copy(cutRect).save("screenShot/" + getSaveFileName())) {
+            QMessageBox::warning(this, "错误", "保存失败");
+            qDebug() << cutRect;
+        } else {
+            QMessageBox::information(this, "提示", "保存成功");
+        }
+    }
 }
 
 void GetScreen::onBtnSaveAsPressed() {
