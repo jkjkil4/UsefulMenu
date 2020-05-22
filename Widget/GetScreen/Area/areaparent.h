@@ -12,7 +12,11 @@ public:
     enum Type {Point, Line};
 
     explicit AreaParent(QWidget *parent = nullptr)
-        : QWidget(parent){}
+        : QWidget(parent)
+    {
+        setMouseTracking(true);
+    }
+
     ~AreaParent() override = default;
 
     virtual void onOtherMoved() {}

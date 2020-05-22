@@ -4,6 +4,8 @@
 #include "Area/horarea.h"
 #include "Area/verarea.h"
 
+#include "ImgView/imgview.h"
+
 #include "ButtonMenu/buttonmenu.h"
 
 #include "Class/iconbtn.h"
@@ -83,6 +85,10 @@ GetScreen::GetScreen(QImage *img)
     connect(changeArea, SIGNAL(timeout()), this, SLOT(onChangeAreaTimeout()));
 
 
+    //大图显示
+    imgView = new ImgView(img, this);
+
+
     //设置窗口属性
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::SubWindow | Qt::FramelessWindowHint);
     //全屏
@@ -90,6 +96,8 @@ GetScreen::GetScreen(QImage *img)
     //设置大小
     resize(img->size());
     move(0, 0);
+    //总是得到mouseMoveEvent
+    setMouseTracking(true);
 }
 
 GetScreen::~GetScreen() {
@@ -101,6 +109,7 @@ void GetScreen::addBtn(ButtonMenu *menu, IconBtn *btn) {
     btn->setColorNormal(QColor(220, 220, 220));
     btn->setColorMouseAt(QColor(230, 230, 230));
     btn->setColorHolding(QColor(210, 210, 210));
+    btn->setMouseTracking(true);
     menu->addWidget(btn);
 }
 
@@ -113,6 +122,7 @@ QCursor GetScreen::getCursorType(int flags) {
 
 
 void GetScreen::onAreaChanged() {
+    isAreaChanged = true;
     area.x1 = qBound(0, area.x1, img->width() - 1);
     area.x2 = qBound(0, area.x2, img->width() - 1);
     area.y1 = qBound(0, area.y1, img->height() - 1);
@@ -128,12 +138,34 @@ void GetScreen::onAreaChanged() {
         changeArea->start(16);
 }
 void GetScreen::onChangeAreaTimeout() {
-    for(auto point : areaWidgets)
-        point->onOtherMoved();
+    if(isAreaChanged) {
+        for(auto point : areaWidgets)
+            point->onOtherMoved();
 
-    cutRect = QRect(QPoint(area.x1, area.y1), QPoint(area.x2, area.y2)).normalized();
+        cutRect = QRect(QPoint(area.x1, area.y1), QPoint(area.x2, area.y2)).normalized();
+    }
 
-    update();
+    if(imgView->isVisible()) {
+        //得到控件应当移动至的坐标
+        QPoint mousePos = cursor().pos();
+        QPoint pos = mousePos + QPoint(ImgView::offset, ImgView::offset);
+
+        //限制
+        QSize screenSize = QApplication::primaryScreen()->size();
+        if(pos.x() > screenSize.width() - imgView->width())
+            pos.setX(pos.x() - imgView->width() - ImgView::offset * 2);
+        if(pos.y() > screenSize.height() - imgView->height())
+            pos.setY(pos.y() - imgView->height() - ImgView::offset * 2);
+
+        //移动
+        imgView->setFocusPos(mousePos);
+        imgView->move(pos);
+    }
+
+    if(isAreaChanged && imgView->isVisible()) {
+        isAreaChanged = false;
+        update();
+    }
 }
 
 void GetScreen::onAreaChangeDone() {
@@ -185,6 +217,8 @@ void GetScreen::mousePressEvent(QMouseEvent *ev) {
             onAreaChangeDone();
             setControlerVisible(true);
         }
+        if(!btnMenu->isVisible())
+            imgView->setVisible(true);
     }
 }
 
@@ -197,6 +231,9 @@ void GetScreen::mouseMoveEvent(QMouseEvent *ev) {
             onAreaChanged();
         }
     }
+
+    if(!changeArea->isActive())
+        changeArea->start(16);
 }
 
 void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
@@ -205,6 +242,7 @@ void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
             isFirstMove = false;
         }
         btnMenu->myShow(QPoint(qMax(area.x1, area.x2), qMax(area.y1, area.y2)));
+        imgView->setVisible(false);
     }
 }
 
@@ -221,8 +259,4 @@ void GetScreen::paintEvent(QPaintEvent *) {
     for(auto rect : region)
         p.drawRect(rect);
 
-    //绘制放大的图像
-
-
-    //QDialog::paintEvent(ev);
 }

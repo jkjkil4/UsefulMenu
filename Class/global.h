@@ -51,4 +51,6 @@ inline void jDrawRecFrame(QPainter *p, QRect rect, int width, QColor c)
 {jDrawRecFrame(p,rect.x(), rect.y(), rect.width(), rect.height(), width, c);}
 
 
+
+
 #endif // GLOBAL_H

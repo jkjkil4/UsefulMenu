@@ -10,10 +10,11 @@ class ButtonMenu : public QWidget
 {
     Q_OBJECT
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 public:
     explicit ButtonMenu(QWidget *parent = nullptr);
+    ~ButtonMenu() override = default;
 
     void addWidget(QWidget *w); //添加控件
     void setMargin(int margin); //设置边缘空隙

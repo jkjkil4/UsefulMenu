@@ -13,6 +13,7 @@ class AreaPoint;
 class ButtonMenu;
 
 class IconBtn;
+class ImgView;
 
 inline QImage getScreenImage() {
     return QApplication::primaryScreen()->grabWindow(0).toImage();
@@ -63,9 +64,16 @@ public slots:
 private:
     QImage *img = nullptr;
 
+    //区域的控制控件
     QVector<AreaParent*> areaWidgets;
     QVector<AreaPoint*> areaPoints;
+    //区域是否被改变
+    bool isAreaChanged = false;
 
+    //大图显示
+    ImgView *imgView = nullptr;
+
+    //按钮菜单
     ButtonMenu *btnMenu = nullptr;
 
     QTimer *changeArea = new QTimer(this);
@@ -73,6 +81,7 @@ private:
     QRect cutRect;
 
     bool isFirstMove = true;
+
 };
 
 #endif // GETSCREEN_H

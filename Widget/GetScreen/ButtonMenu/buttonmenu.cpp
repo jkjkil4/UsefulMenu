@@ -9,6 +9,7 @@ ButtonMenu::ButtonMenu(QWidget *parent) : QWidget(parent)
     setLayout(layout);
 
     setVisible(false);
+    setMouseTracking(true);
 }
 
 

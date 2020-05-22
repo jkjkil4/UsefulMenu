@@ -35,6 +35,7 @@ SOURCES += \
         Widget/GetScreen/Area/horarea.cpp \
         Widget/GetScreen/Area/verarea.cpp \
         Widget/GetScreen/ButtonMenu/buttonmenu.cpp \
+        Widget/GetScreen/ImgView/imgview.cpp \
         Widget/GetScreen/getscreen.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
         Widget/GetScreen/Area/horarea.h \
         Widget/GetScreen/Area/verarea.h \
         Widget/GetScreen/ButtonMenu/buttonmenu.h \
+        Widget/GetScreen/ImgView/imgview.h \
         Widget/GetScreen/getscreen.h \
         Widget/ball.h \
         Class/global.h \
