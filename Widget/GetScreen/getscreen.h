@@ -23,6 +23,7 @@ class GetScreen : public QDialog
 {
     Q_OBJECT
 protected:
+    void keyPressEvent(QKeyEvent *ev) override;
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
@@ -33,9 +34,12 @@ private:
     {
         int x1 = 0, y1 = 0;
         int x2 = 0, y2 = 0;
+        QRect rect() {
+            return QRect(QPoint(x1, y1), QPoint(x2, y2)).normalized();
+        }
     }area;
 
-    QCursor alignMap[3][3]{
+    Qt::CursorShape alignMap[3][3]{
         {Qt::SizeFDiagCursor, Qt::SizeVerCursor, Qt::SizeBDiagCursor},
         {Qt::SizeHorCursor,   Qt::SizeAllCursor, Qt::SizeHorCursor},
         {Qt::SizeBDiagCursor, Qt::SizeVerCursor, Qt::SizeFDiagCursor}
@@ -53,6 +57,7 @@ public:
 
    QString getSaveFileName();
    QString getMS();
+   void saveImage(QString path);
 
 public slots:
     void onAreaChanged();

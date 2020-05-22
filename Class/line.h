@@ -9,10 +9,11 @@ class Line : public QWidget
 {
     Q_OBJECT
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 public:
     explicit Line(Qt::Orientation ori, QColor color = Qt::black, QWidget *parent = nullptr);
+    ~Line() override = default;
 
     VARIBLE_FUNC(Color, color, QColor)
 

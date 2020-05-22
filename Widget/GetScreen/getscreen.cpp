@@ -14,7 +14,12 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QMessageBox>
+#include <QClipboard>
+
 #include <QDir>
+#include <QFileDialog>
+#include <QSettings>
+#include <QFileInfo>
 
 GetScreen::GetScreen(QImage *img)
     : img(img)
@@ -123,20 +128,6 @@ QCursor GetScreen::getCursorType(int flags) {
 }
 
 
-QString GetScreen::getSaveFileName() {
-    //"jss" means "jScreenShot"
-    return "jss " + QDateTime(QDateTime::currentDateTime()).toString("yy-MM-dd hh-mm-ss-")
-             + getMS() + ".png";
-}
-
-QString GetScreen::getMS() {
-    QString ms = QString::number(QDateTime::currentDateTime().time().msec());
-    for( int i = 0; i < 3 - ms.length(); i++ )
-        ms.insert(0, "0");
-    return ms;
-}
-
-
 void GetScreen::onAreaChanged() {
     isAreaChanged = true;
     area.x1 = qBound(0, area.x1, img->width() - 1);
@@ -158,7 +149,7 @@ void GetScreen::onChangeAreaTimeout() {
         for(auto point : areaWidgets)
             point->onOtherMoved();
 
-        cutRect = QRect(QPoint(area.x1, area.y1), QPoint(area.x2, area.y2)).normalized();
+        cutRect = area.rect();
     }
 
     if(imgView->isVisible()) {
@@ -178,11 +169,39 @@ void GetScreen::onChangeAreaTimeout() {
         imgView->move(pos);
     }
 
-    if(isAreaChanged && imgView->isVisible()) {
+    if(isAreaChanged) {
         isAreaChanged = false;
         update();
     }
 }
+
+
+QString GetScreen::getSaveFileName() {
+    //"jss" means "jScreenShot"
+    return "jss " + QDateTime(QDateTime::currentDateTime()).toString("yy-MM-dd hh-mm-ss-")
+             + getMS() + ".png";
+}
+
+QString GetScreen::getMS() {
+    QString ms = QString::number(QDateTime::currentDateTime().time().msec());
+    for( int i = 0; i < 3 - ms.length(); i++ )
+        ms.insert(0, "0");
+    return ms;
+}
+
+void GetScreen::saveImage(QString path) {
+    if(!cutRect.isValid()) {
+        QMessageBox::warning(this, "错误", "图像无效");
+        return;
+    }
+    if(!img->copy(cutRect).save(path)) {
+        QMessageBox::warning(this, "错误", "保存失败");
+        return;
+    }
+
+    QMessageBox::information(this, "提示", "保存成功");
+}
+
 
 void GetScreen::onAreaChangeDone() {
     int *left = (area.x1 < area.x2 ? &area.x1 : &area.x2);
@@ -201,20 +220,20 @@ void GetScreen::onBtnSavePressed() {
     if(!dir.exists("screenShot"))
         dir.mkdir("screenShot");
 
-    if(!cutRect.isValid()) {
-        QMessageBox::warning(this, "错误", "图像无效");
-    } else {
-        if(!img->copy(cutRect).save("screenShot/" + getSaveFileName())) {
-            QMessageBox::warning(this, "错误", "保存失败");
-            qDebug() << cutRect;
-        } else {
-            QMessageBox::information(this, "提示", "保存成功");
-        }
-    }
+    saveImage("screenShot/" + getSaveFileName());
 }
 
 void GetScreen::onBtnSaveAsPressed() {
-
+    //打开ini文件
+    QSettings config("settings.ini", QSettings::IniFormat);
+    //从ini中得到原先存储图片的路径
+    QString pathBefore = config.value("path/saveImagePath", "").toString();
+    //从用户处得到存储图片的路径
+    QString path = QFileDialog::getSaveFileName(this, QString(), pathBefore + "/" + getSaveFileName(), "png (*.png);;jpg (*.jpg)");
+    //将该路径保存至ini中
+    config.setValue("path/saveImagePath", QFileInfo(path).path());
+    //存储图片
+    saveImage(path);
 }
 
 void GetScreen::onBtnCancelPressed() {
@@ -222,6 +241,7 @@ void GetScreen::onBtnCancelPressed() {
 }
 
 void GetScreen::onBtnAcceptPressed() {
+    QApplication::clipboard()->setImage(img->copy(cutRect));
     close();
 }
 
@@ -232,11 +252,33 @@ void GetScreen::setControlerVisible(bool on) {
 }
 
 
+void GetScreen::keyPressEvent(QKeyEvent *ev) {
+    int xOffset = 0, yOffset = 0;
+    switch (ev->key()) {
+    case Qt::Key_W:
+        yOffset = -1;
+        break;
+    case Qt::Key_S:
+        yOffset = 1;
+        break;
+    case Qt::Key_A:
+        xOffset = -1;
+        break;
+    case Qt::Key_D:
+        xOffset = 1;
+        break;
+    }
+    cursor().setPos(cursor().pos() + QPoint(xOffset, yOffset));
+
+    QDialog::keyPressEvent(ev);
+}
+
+
 void GetScreen::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         if(isFirstMove) {
             QPoint pos = ev->pos();
-            //这是区域的位置
+            //设置区域的位置
             area.x1 = pos.x();
             area.y1 = pos.y();
             area.x2 = pos.x();
