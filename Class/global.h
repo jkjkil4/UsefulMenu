@@ -9,7 +9,7 @@
     varibleType get##FuncName(){return varibleName;}\
     void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
 
-#define TIME_DEBUG
+//#define TIME_DEBUG
 #ifdef TIME_DEBUG
 # include <QTime>
 # define TIME_BEGIN QTime _t_;_t_.start();

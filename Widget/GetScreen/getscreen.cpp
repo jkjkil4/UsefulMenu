@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QClipboard>
+#include <QTime>
 
 #include <QDir>
 #include <QFileDialog>

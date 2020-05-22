@@ -99,7 +99,7 @@ void Widget::onGetScreen() {
     setVisible(true);
 
 #ifdef TIME_DEBUG
-    TIME_OUTPUT("截图消耗时间:");
+    TIME_OUTPUT("截图消耗时间(ms):");
 #endif
 
     GetScreen getScreen(&img);
