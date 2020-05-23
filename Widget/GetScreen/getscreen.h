@@ -37,6 +37,12 @@ private:
         QRect rect() {
             return QRect(QPoint(qMin(x1, x2), qMin(y1, y2)), QPoint(qMax(x1, x2), qMax(y1, y2)));
         }
+        void reset() {
+            x1 = 0;
+            x2 = 0;
+            y1 = 0;
+            y2 = 0;
+        }
     }area;
 
     Qt::CursorShape alignMap[3][3]{

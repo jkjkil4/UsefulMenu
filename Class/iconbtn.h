@@ -8,6 +8,8 @@
 class IconBtn : public QAbstractButton
 {
 protected:
+    void keyPressEvent(QKeyEvent *) override {}
+    void keyReleaseEvent(QKeyEvent *) override {}
     void paintEvent(QPaintEvent *) override;
 
 public:

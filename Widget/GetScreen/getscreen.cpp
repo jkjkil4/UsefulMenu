@@ -312,12 +312,19 @@ void GetScreen::mouseMoveEvent(QMouseEvent *ev) {
 }
 
 void GetScreen::mouseReleaseEvent(QMouseEvent *ev) {
-    if(ev->button() == Qt::LeftButton) {
+    switch ((int)ev->button()) {
+    case Qt::LeftButton:
         if(isFirstMove){
             isFirstMove = false;
         }
         btnMenu->myShow(QPoint(qMax(area.x1, area.x2), qMax(area.y1, area.y2)));
         imgView->setVisible(false);
+        break;
+    case Qt::RightButton:
+        if(isFirstMove) {
+            close();
+        }
+        break;
     }
 }
 

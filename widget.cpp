@@ -109,11 +109,6 @@ void Widget::onGetScreen() {
 void Widget::onShowShortcut() {
     ShortcutWidget *w = new ShortcutWidget;
 
-    //设置属性
-    w->setStyleSheet("background-color: rgb(220, 220, 220);");
-    w->setWindowFlags(w->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    w->setAttribute(Qt::WA_DeleteOnClose);
-
     //设定位置
     QSize screenSize = QApplication::primaryScreen()->availableSize();
     int toX = x() + btnList->x() + btnList->width();
