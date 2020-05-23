@@ -10,6 +10,7 @@
 
 #include <QDebug>
 
+#include "PathDialog/pathdialog.h"
 
 #define PATH_DIALOG(pathFunc)\
     hasChildWindow = true;\
@@ -44,9 +45,21 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     connect(btnAddDir, SIGNAL(clicked()), this, SLOT(onBtnAddDirClicked()));
     connect(btnAddPath, SIGNAL(clicked()), this, SLOT(onBtnAddPathClicked()));
 
+    pathDialog = new PathDialog;
+    pathDialog->setVisible(false);
+    connect(pathDialog, &PathDialog::accepted, [=]{
+        paths.push_back(pathDialog->text());
+
+    });
+    connect(pathDialog, &PathDialog::hided, [=]{
+        adjustSize();
+    });
+
     QVBoxLayout *layMain = new QVBoxLayout;
     layMain->setMargin(2);
+    layMain->setSpacing(2);
     layMain->addLayout(layTop);
+    layMain->addWidget(pathDialog);
     setLayout(layMain);
 
     //设置属性
@@ -86,7 +99,7 @@ void ShortcutWidget::onBtnAddDirClicked() {
 }
 
 void ShortcutWidget::onBtnAddPathClicked() {
-
+    pathDialog->setVisible(true);
 }
 
 
