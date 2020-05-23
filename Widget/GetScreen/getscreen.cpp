@@ -231,10 +231,13 @@ void GetScreen::onBtnSaveAsPressed() {
     QString pathBefore = config.value("path/saveImagePath", "").toString();
     //从用户处得到存储图片的路径
     QString path = QFileDialog::getSaveFileName(this, QString(), pathBefore + "/" + getSaveFileName(), "png (*.png);;jpg (*.jpg)");
-    //将该路径保存至ini中
-    config.setValue("path/saveImagePath", QFileInfo(path).path());
-    //存储图片
-    saveImage(path);
+
+    if(path != "") {    //如果路径不为空
+        //将该路径保存至ini中
+        config.setValue("path/saveImagePath", QFileInfo(path).path());
+        //存储图片
+        saveImage(path);
+    }
 }
 
 void GetScreen::onBtnCancelPressed() {

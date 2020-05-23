@@ -40,6 +40,8 @@ private:
     bool isMoving = false;
 
     int maxHeight = 32;
+
+
 };
 
 #endif // WIDGET_H

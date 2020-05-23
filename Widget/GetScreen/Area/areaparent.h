@@ -21,8 +21,8 @@ public:
 
     virtual void onOtherMoved() {}
 
-    static constexpr int pointSize = 5;
-    static constexpr int pointRadius = pointSize / 2;
+    SC int pointSize = 5;
+    SC int pointRadius = pointSize / 2;
 
 signals:
     void moved();

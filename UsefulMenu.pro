@@ -29,6 +29,7 @@ DEFINES += WIN32_LEAN_AND_MEAN
 CONFIG += c++11
 
 SOURCES += \
+        Class/autoclosewidget.cpp \
         Class/iconbtn.cpp \
         Class/line.cpp \
         Widget/GetScreen/Area/areapoint.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
         Widget/GetScreen/ButtonMenu/buttonmenu.cpp \
         Widget/GetScreen/ImgView/imgview.cpp \
         Widget/GetScreen/getscreen.cpp \
+        Widget/ShortcutWidget/shortcutwidget.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
         main.cpp \
@@ -44,6 +46,7 @@ SOURCES += \
         widget.cpp
 
 HEADERS += \
+        Class/autoclosewidget.h \
         Class/iconbtn.h \
         Class/line.h \
         Widget/GetScreen/Area/areaparent.h \
@@ -53,6 +56,7 @@ HEADERS += \
         Widget/GetScreen/ButtonMenu/buttonmenu.h \
         Widget/GetScreen/ImgView/imgview.h \
         Widget/GetScreen/getscreen.h \
+        Widget/ShortcutWidget/shortcutwidget.h \
         Widget/ball.h \
         Class/global.h \
         Class/rammonitor.h \

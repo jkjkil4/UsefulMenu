@@ -7,9 +7,9 @@
 #include "Widget/btnlist.h"
 
 #include "Widget/GetScreen/getscreen.h"
+#include "Widget/ShortcutWidget/shortcutwidget.h"
 
 #include "Class/iconbtn.h"
-
 #include "Class/global.h"
 
 #include <QDebug>
@@ -107,7 +107,25 @@ void Widget::onGetScreen() {
 }
 
 void Widget::onShowShortcut() {
+    ShortcutWidget *w = new ShortcutWidget;
 
+    //设置属性
+    w->setStyleSheet("background-color: rgb(220, 220, 220);");
+    w->setWindowFlags(w->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    w->setAttribute(Qt::WA_DeleteOnClose);
+
+    //设定位置
+    QSize screenSize = QApplication::primaryScreen()->availableSize();
+    int toX = x() + btnList->x() + btnList->width();
+    int toY = y();
+    if(toX > screenSize.width() - w->width())
+        toX -= btnList->width() + w->width();
+    if(toY > screenSize.height() - w->height())
+        toY = screenSize.height() - w->height();
+    w->move(toX, toY);
+
+    //显示
+    w->show();
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *) {

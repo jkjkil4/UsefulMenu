@@ -9,6 +9,8 @@
     varibleType get##FuncName(){return varibleName;}\
     void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
 
+#define SC static constexpr
+
 //#define TIME_DEBUG
 #ifdef TIME_DEBUG
 # include <QTime>

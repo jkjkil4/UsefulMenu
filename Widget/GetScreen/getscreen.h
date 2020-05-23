@@ -35,7 +35,7 @@ private:
         int x1 = 0, y1 = 0;
         int x2 = 0, y2 = 0;
         QRect rect() {
-            return QRect(QPoint(x1, y1), QPoint(x2, y2)).normalized();
+            return QRect(QPoint(qMin(x1, x2), qMin(y1, y2)), QPoint(qMax(x1, x2), qMax(y1, y2)));
         }
     }area;
 
