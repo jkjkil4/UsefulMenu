@@ -39,6 +39,8 @@ SOURCES += \
         Widget/GetScreen/ImgView/imgview.cpp \
         Widget/GetScreen/getscreen.cpp \
         Widget/ShortcutWidget/PathDialog/pathdialog.cpp \
+        Widget/ShortcutWidget/PathsView/pathbtn.cpp \
+        Widget/ShortcutWidget/PathsView/pathsview.cpp \
         Widget/ShortcutWidget/shortcutwidget.cpp \
         Widget/ball.cpp \
         Widget/btnlist.cpp \
@@ -58,6 +60,8 @@ HEADERS += \
         Widget/GetScreen/ImgView/imgview.h \
         Widget/GetScreen/getscreen.h \
         Widget/ShortcutWidget/PathDialog/pathdialog.h \
+        Widget/ShortcutWidget/PathsView/pathbtn.h \
+        Widget/ShortcutWidget/PathsView/pathsview.h \
         Widget/ShortcutWidget/shortcutwidget.h \
         Widget/ball.h \
         Class/global.h \

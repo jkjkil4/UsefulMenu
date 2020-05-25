@@ -8,6 +8,8 @@
 
 #include "Class/autoclosewidget.h"
 
+#include "PathsView/pathsview.h"
+
 class PathDialog;
 
 class ShortcutWidget : public AutoCloseWidget
@@ -26,9 +28,11 @@ public slots:
     void onBtnAddPathClicked();
 
 private:
-    QStringList paths;
+    QList<PathBtn*> paths;
 
     PathDialog *pathDialog = nullptr;
+    PathsView *pathsView = nullptr;
+
 
     bool hasChildWindow = false;
 };

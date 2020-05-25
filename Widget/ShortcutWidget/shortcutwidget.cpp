@@ -13,15 +13,16 @@
 #include "PathDialog/pathdialog.h"
 
 #define PATH_DIALOG(pathFunc)\
-    hasChildWindow = true;\
     QSettings config("settings.ini", QSettings::IniFormat);\
     QString pathBefore = config.value("path/addFileOrDirPath", "").toString();\
+    hasChildWindow = true;\
     QString path = QFileDialog::pathFunc(this, QString(), pathBefore);\
+    hasChildWindow = false;\
     if(path != "") {\
         config.setValue("path/addFileOrDirPath", QFileInfo(path).path());\
-        paths.push_back(path);\
+        paths.push_back(new PathBtn(path, pathsView));\
     }\
-    hasChildWindow = false;
+
 
 
 ShortcutWidget::ShortcutWidget(QWidget *parent)
@@ -35,9 +36,14 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     QPushButton *btnAddFile = new QPushButton("添加文件");
     QPushButton *btnAddDir = new QPushButton("添加文件夹");
     QPushButton *btnAddPath = new QPushButton("添加路径");
+
     QLabel *titleLabel = new QLabel("快捷方式");
+    QFont font = titleLabel->font();
+    font.setPointSize(12);
+    titleLabel->setFont(font);
+
     layTop->addWidget(titleLabel);
-    layTop->addStretch();
+    layTop->addStretch(2);
     layTop->addWidget(btnAddFile);
     layTop->addWidget(btnAddDir);
     layTop->addWidget(btnAddPath);
@@ -45,21 +51,28 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     connect(btnAddDir, SIGNAL(clicked()), this, SLOT(onBtnAddDirClicked()));
     connect(btnAddPath, SIGNAL(clicked()), this, SLOT(onBtnAddPathClicked()));
 
+
     pathDialog = new PathDialog;
     pathDialog->setVisible(false);
     connect(pathDialog, &PathDialog::accepted, [=]{
-        paths.push_back(pathDialog->text());
+        paths.push_back(new PathBtn(pathDialog->text(), pathsView));
 
     });
     connect(pathDialog, &PathDialog::hided, [=]{
+        pathsView->setVisible(true);
         adjustSize();
     });
 
+
+    pathsView = new PathsView(&paths);
+
+
     QVBoxLayout *layMain = new QVBoxLayout;
     layMain->setMargin(2);
-    layMain->setSpacing(2);
+    layMain->setSpacing(0);
     layMain->addLayout(layTop);
     layMain->addWidget(pathDialog);
+    layMain->addWidget(pathsView);
     setLayout(layMain);
 
     //设置属性
@@ -68,6 +81,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_DeleteOnClose);
     adjustSize();
+    limitWidth(this, width());
 
     //读取路径
     QDir dir;
@@ -82,24 +96,30 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
             while(!in.atEnd()) {
                 QString path = in.readLine().simplified().trimmed();
                 if(path != "")
-                    paths.push_back(path);
+                    paths.push_back(new PathBtn(path, pathsView));
             }
             file.close();
         }
     }
+    pathsView->updateChildPos();
 }
 
 
 void ShortcutWidget::onBtnAddFileClicked() {
     PATH_DIALOG(getOpenFileName);
+    pathsView->updateChildPos();
 }
 
 void ShortcutWidget::onBtnAddDirClicked() {
     PATH_DIALOG(getExistingDirectory);
+    pathsView->updateChildPos();
 }
 
 void ShortcutWidget::onBtnAddPathClicked() {
+    pathsView->setVisible(false);
     pathDialog->setVisible(true);
+    adjustSize();
+    pathsView->updateChildPos();
 }
 
 
@@ -113,8 +133,8 @@ void ShortcutWidget::closeEvent(QCloseEvent *ev) {
             QMessageBox::warning(this, "错误", "保存路径失败");
         } else {
             QTextStream out(&file);
-            for(auto path : paths)
-                out << path << "\n";
+            for(auto pathBtn : paths)
+                out << pathBtn->getPath() << "\n";
             file.close();
         }
     }
