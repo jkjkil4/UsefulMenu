@@ -3,12 +3,16 @@
 
 #include <QAbstractButton>
 
+#include <QFileIconProvider>
+
 #include "Class/global.h"
 
 class PathBtn : public QAbstractButton
 {
     Q_OBJECT
 protected:
+    void keyPressEvent(QKeyEvent *) override {}
+    void keyReleaseEvent(QKeyEvent *) override {}
     void paintEvent(QPaintEvent *) override;
 
 public:
@@ -28,11 +32,12 @@ public:
     SC QRgb colBorder = qRgb(10, 100, 196);
 
     SC QRgb colNormal = qRgb(100, 100, 100);
-    SC QRgb colMouseAt = qRgb(115, 115, 115);
     SC QRgb colHolding = qRgb(85, 85, 85);
 
 private:
     QString path;
+    QString fileName;
+    QPixmap pathIcon;
 };
 
 #endif // PATHBTN_H
