@@ -19,7 +19,18 @@ PathBtn::PathBtn(QString path, QWidget *parent)
 
     //点击之后打开文件/文件夹
     connect(this, &PathBtn::clicked, [=]{
-        qDebug() << fileName + "被点击";
+        QDir dir;
+        if(!dir.exists(path)) {
+            QMessageBox::information(this, "提示", "路径不存在");
+        } else {
+            if( dir.cd(path) ){
+                QProcess::startDetached("cmd.exe", QStringList() << "/c" << "start " + path);
+            }else{
+                QFileInfo info(path);
+                QProcess::startDetached("cmd.exe",
+                    QStringList() << "/c" << info.fileName(), info.path() );
+            }
+        }
     });
 }
 

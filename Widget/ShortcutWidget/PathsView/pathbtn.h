@@ -4,6 +4,10 @@
 #include <QAbstractButton>
 
 #include <QFileIconProvider>
+#include <QMessageBox>
+
+#include <QDir>
+#include <QProcess>
 
 #include "Class/global.h"
 
