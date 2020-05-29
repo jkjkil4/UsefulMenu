@@ -84,4 +84,5 @@ inline void jDrawText(QPainter *p, int x, int y, int flags, QString str, int xLi
 inline void jDrawText(QPainter *p, QPoint pos, int flags, QString str, int xLimit = -1, int yLimit = -1){jDrawText(p,pos.x(),pos.y(),flags,str,xLimit,yLimit);}
 
 
+
 #endif // GLOBAL_H

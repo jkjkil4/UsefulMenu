@@ -8,6 +8,7 @@
 
 #include "Widget/GetScreen/getscreen.h"
 #include "Widget/ShortcutWidget/shortcutwidget.h"
+#include "Widget/CreateNote/createnote.h"
 
 #include "Class/iconbtn.h"
 #include "Class/global.h"
@@ -31,9 +32,14 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     IconBtn *btnShortcut = new IconBtn(btnList);
     btnShortcut->setIcon(QIcon(":/funcBtn/Resource/fast.png"));
     connect(btnShortcut, SIGNAL(clicked()), this, SLOT(onShowShortcut()));
+    //
+    IconBtn *btnCreateNote = new IconBtn(btnList);
+    btnCreateNote->setIcon(QIcon(":/funcBtn/Resource/note.png"));
+    connect(btnCreateNote, SIGNAL(clicked()), this, SLOT(onCreateNote()));
 
     btnList->updateChildsPos();
     maxHeight = btnList->getSuitableHeight() + btnList->y();
+
 
     //球形区域，显示CPU和RAM使用率
     ball = new Ball(this);
@@ -55,8 +61,10 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
     });
     connect(ball, &Ball::closeWidget, [=]{close();});
 
+
     //检测鼠标进入和离开
     connect(checkMouse, SIGNAL(timeout()), this, SLOT(onCheckMouse()));
+
 
     //设置为32x32
     showNarrow();
@@ -80,6 +88,28 @@ void Widget::showNarrow() {
 void Widget::showExpand() {
     limitSize(this, 32, maxHeight);
     btnList->setVisible(true);
+}
+
+template<typename T>
+QWidget* Widget::createWidgetAtProperPos() {
+    T *w = new T;
+
+    //得到合适的位置
+    QSize screenSize = QApplication::primaryScreen()->availableSize();
+    int toX = x() + btnList->x() + btnList->width();
+    int toY = y();
+    if(toX > screenSize.width() - w->width())
+        toX -= btnList->width() + w->width();
+    if(toY > screenSize.height() - w->height())
+        toY = screenSize.height() - w->height();
+
+    //设置位置
+    w->move(toX, toY);
+
+    //显示
+    w->show();
+
+    return w;
 }
 
 void Widget::onCheckMouse() {
@@ -107,20 +137,11 @@ void Widget::onGetScreen() {
 }
 
 void Widget::onShowShortcut() {
-    ShortcutWidget *w = new ShortcutWidget;
+    createWidgetAtProperPos<ShortcutWidget>();
+}
 
-    //设定位置
-    QSize screenSize = QApplication::primaryScreen()->availableSize();
-    int toX = x() + btnList->x() + btnList->width();
-    int toY = y();
-    if(toX > screenSize.width() - w->width())
-        toX -= btnList->width() + w->width();
-    if(toY > screenSize.height() - w->height())
-        toY = screenSize.height() - w->height();
-    w->move(toX, toY);
-
-    //显示
-    w->show();
+void Widget::onCreateNote() {
+    createWidgetAtProperPos<CreateNote>()->activateWindow();
 }
 
 void Widget::mouseMoveEvent(QMouseEvent *) {

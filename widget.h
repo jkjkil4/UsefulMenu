@@ -25,6 +25,9 @@ public:
     void showNarrow();
     void showExpand();
 
+    template<typename T>
+    QWidget* createWidgetAtProperPos();
+
     Ball *ball = nullptr;
     BtnList *btnList = nullptr;
 
@@ -33,6 +36,7 @@ public slots:
 
     void onGetScreen();
     void onShowShortcut();
+    void onCreateNote();
 
 private:
     QTimer *checkMouse = new QTimer(this);

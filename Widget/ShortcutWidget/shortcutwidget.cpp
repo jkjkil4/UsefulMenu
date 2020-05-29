@@ -126,16 +126,17 @@ void ShortcutWidget::onBtnAddPathClicked() {
 void ShortcutWidget::closeEvent(QCloseEvent *ev) {
     if(hasChildWindow) {    //如果有关联的窗口，则不关闭
         ev->ignore();
+        return;
+    }
+
+    //关闭时保存路径
+    QFile file("paths.txt");
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "错误", "保存路径失败");
     } else {
-        //关闭时保存路径
-        QFile file("paths.txt");
-        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QMessageBox::warning(this, "错误", "保存路径失败");
-        } else {
-            QTextStream out(&file);
-            for(auto pathBtn : paths)
-                out << pathBtn->getPath() << "\n";
-            file.close();
-        }
+        QTextStream out(&file);
+        for(auto pathBtn : paths)
+            out << pathBtn->getPath() << "\n";
+        file.close();
     }
 }

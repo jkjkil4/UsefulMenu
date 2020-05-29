@@ -2,6 +2,7 @@
     <qresource prefix="/funcBtn">
         <file>Resource/cut.png</file>
         <file>Resource/fast.png</file>
+        <file>Resource/note.png</file>
     </qresource>
     <qresource prefix="/getScreenBtn">
         <file>Resource/save1.png</file>

@@ -32,6 +32,8 @@ SOURCES += \
         Class/autoclosewidget.cpp \
         Class/iconbtn.cpp \
         Class/line.cpp \
+        Widget/CreateNote/TextEditEx/plaintexteditex.cpp \
+        Widget/CreateNote/createnote.cpp \
         Widget/GetScreen/Area/areapoint.cpp \
         Widget/GetScreen/Area/horarea.cpp \
         Widget/GetScreen/Area/verarea.cpp \
@@ -52,6 +54,8 @@ HEADERS += \
         Class/autoclosewidget.h \
         Class/iconbtn.h \
         Class/line.h \
+        Widget/CreateNote/TextEditEx/plaintexteditex.h \
+        Widget/CreateNote/createnote.h \
         Widget/GetScreen/Area/areaparent.h \
         Widget/GetScreen/Area/areapoint.h \
         Widget/GetScreen/Area/horarea.h \
