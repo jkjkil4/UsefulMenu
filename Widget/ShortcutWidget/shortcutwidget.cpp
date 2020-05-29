@@ -20,7 +20,10 @@
     hasChildWindow = false;\
     if(path != "") {\
         config.setValue("path/addFileOrDirPath", QFileInfo(path).path());\
-        paths.push_back(new PathBtn(path, pathsView));\
+        PathBtn *btn = new PathBtn(path, pathsView);\
+        btn->setVisible(true);\
+        paths.push_back(btn);\
+        pathsView->updateChildPos();\
     }\
 
 
@@ -55,8 +58,10 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     pathDialog = new PathDialog;
     pathDialog->setVisible(false);
     connect(pathDialog, &PathDialog::accepted, [=]{
-        paths.push_back(new PathBtn(pathDialog->text(), pathsView));
-
+        PathBtn *btn = new PathBtn(pathDialog->text(), pathsView);
+        btn->setVisible(true);
+        paths.push_back(btn);
+        pathsView->updateChildPos();
     });
     connect(pathDialog, &PathDialog::hided, [=]{
         pathsView->setVisible(true);
@@ -118,6 +123,7 @@ void ShortcutWidget::onBtnAddDirClicked() {
 void ShortcutWidget::onBtnAddPathClicked() {
     pathsView->setVisible(false);
     pathDialog->setVisible(true);
+    pathDialog->setFocusToLineEdit();
     adjustSize();
     pathsView->updateChildPos();
 }

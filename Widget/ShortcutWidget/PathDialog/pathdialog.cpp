@@ -54,3 +54,8 @@ void PathDialog::onHide() {
     btnAccept->setStyleSheet("");
     emit hided();
 }
+
+
+void PathDialog::setFocusToLineEdit() {
+    lineEdit->setFocus();
+}

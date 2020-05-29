@@ -26,6 +26,8 @@ public:
 
     void onHide();
 
+    void setFocusToLineEdit();
+
 signals:
     void accpeted();
     void hided();
