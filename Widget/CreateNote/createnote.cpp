@@ -2,6 +2,7 @@
 
 
 #define LIMIT_LENGTH 15
+#define PLACEHOLDER_MAX_LENGTH 50
 
 #include <QDebug>
 
@@ -21,8 +22,9 @@ CreateNote::CreateNote(QWidget *parent)
     connect(keepWindowCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onKeepWindowCheckBoxStateChanged(int)));
 
 
-    titleEdit->setPlaceholderText("默认文字");  //设置titleEdit的默认文字
+    titleEdit->setPlaceholderText("标题");  //设置titleEdit的默认文字
     textEdit->setLineWrapMode(((QPlainTextEdit::LineWrapMode)isAutoWarp));  //设置是否自动换行
+    textEdit->setWordWrapMode(QTextOption::WrapAnywhere);
     setTextEditPointSize(titleEdit, 11);    //设置titleEdit的字体大小
     setTextEditPointSize(textEdit, pointSize);  //设置textEdit的字体大小
     labTitle->setText(makeTitleText()); //设置该控件的顶端的文字
@@ -88,7 +90,8 @@ void CreateNote::onTextEditPointSizeChanged() {
 }
 
 void CreateNote::onTextEditTextChanged() {
-    QRegularExpression regExpr = QRegularExpression("");
+    QString firstLine = textEdit->document()->firstBlock().text();
+    titleEdit->setPlaceholderText(firstLine.left(PLACEHOLDER_MAX_LENGTH));
 }
 
 
@@ -102,6 +105,38 @@ void CreateNote::onKeepWindowCheckBoxStateChanged(int state) {
 
 
 void CreateNote::onAcceptBtnClicked() {
+    QString title = titleEdit->text();  //得到输入的文本
+    if(title == "") //如果输入的文本为空(没输入)
+        title = titleEdit->placeholderText();   //得到默认的文本
+
+    //得到当前时间
+    QString ms = QString::number(QDateTime::currentDateTime().time().msec());
+    for( int i = 0; i < 3 - ms.length(); i++ )
+        ms.insert(0, "0");
+    QString timeStr = QDateTime(QDateTime::currentDateTime()).toString("yy-MM-dd hh-mm-ss-") + ms;
+
+    //创建一些目录
+    QDir dir;
+    if(!dir.exists("Notes"))
+        dir.mkdir("Notes");
+
+    QString fileDirPath = "Notes/" + timeStr;
+    if(!dir.exists(fileDirPath))
+        dir.mkdir(fileDirPath);
+
+    //保存设定
+    QSettings noteConfig(fileDirPath + "/info.ini", QSettings::IniFormat);
+    noteConfig.setValue("note/title", title);
+
+    //保存文本
+    QFile fileDoc(fileDirPath + "/doc.txt");
+    if(fileDoc.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&fileDoc);
+        out << textEdit->toPlainText();
+        fileDoc.close();
+    }
+
+    //关闭窗口
     isCloseByBtn = true;
     close();
 }

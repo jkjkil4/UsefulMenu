@@ -13,7 +13,8 @@
 
 #include <QMessageBox>
 #include <QSettings>
-#include <QRegularExpression>
+#include <QDir>
+#include <QDateTime>
 
 #include "Class/global.h"
 

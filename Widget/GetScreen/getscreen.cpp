@@ -218,10 +218,10 @@ void GetScreen::onAreaChangeDone() {
 
 void GetScreen::onBtnSavePressed() {
     QDir dir;
-    if(!dir.exists("screenShot"))
-        dir.mkdir("screenShot");
+    if(!dir.exists("ScreenShot"))
+        dir.mkdir("ScreenShot");
 
-    saveImage("screenShot/" + getSaveFileName());
+    saveImage("ScreenShot/" + getSaveFileName());
 }
 
 void GetScreen::onBtnSaveAsPressed() {
