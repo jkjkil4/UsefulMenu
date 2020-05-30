@@ -8,7 +8,14 @@ PathBtn::PathBtn(QString path, QWidget *parent)
 {
     //得到文件名
     QFileInfo info(path);
-    fileName = info.baseName();
+    if(info.isDir()) {
+        //文件夹
+        fileName = info.fileName();
+    } else {
+        //文件
+        QString temp = info.fileName();
+        fileName = temp.left(temp.lastIndexOf("."));
+    }
     setToolTip(info.fileName());
 
     //得到图标
@@ -23,10 +30,10 @@ PathBtn::PathBtn(QString path, QWidget *parent)
         if(!dir.exists(path)) {
             QMessageBox::information(this, "提示", "路径不存在");
         } else {
-            if( dir.cd(path) ){
+            QFileInfo info(path);
+            if( info.isDir() ){
                 QProcess::startDetached("cmd.exe", QStringList() << "/c" << "start " + path);
             }else{
-                QFileInfo info(path);
                 QProcess::startDetached("cmd.exe",
                     QStringList() << "/c" << info.fileName(), info.path() );
             }

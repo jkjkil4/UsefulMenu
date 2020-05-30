@@ -9,8 +9,10 @@
 #include <QTextStream>
 
 #include <QDebug>
+#include <QScrollBar>
 
 #include "PathDialog/pathdialog.h"
+
 
 #define PATH_DIALOG(pathFunc)\
     QSettings config("settings.ini", QSettings::IniFormat);\
@@ -20,10 +22,7 @@
     hasChildWindow = false;\
     if(path != "") {\
         config.setValue("path/addFileOrDirPath", QFileInfo(path).path());\
-        PathBtn *btn = new PathBtn(path, pathsView);\
-        btn->setVisible(true);\
-        paths.push_back(btn);\
-        pathsView->updateChildPos();\
+        newItem(path);\
     }\
 
 
@@ -58,18 +57,23 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     pathDialog = new PathDialog;
     pathDialog->setVisible(false);
     connect(pathDialog, &PathDialog::accepted, [=]{
-        PathBtn *btn = new PathBtn(pathDialog->text(), pathsView);
-        btn->setVisible(true);
-        paths.push_back(btn);
-        pathsView->updateChildPos();
+        newItem(pathDialog->text());
     });
     connect(pathDialog, &PathDialog::hided, [=]{
-        pathsView->setVisible(true);
+        listWidget->setVisible(true);
         adjustSize();
     });
 
 
-    pathsView = new PathsView(&paths);
+    listWidget->setViewMode(QListView::IconMode);
+    listWidget->setMovement(QListView::Static);
+    listWidget->setSpacing(0);
+    listWidget->setFrameStyle(QFrame::NoFrame);
+    listWidget->setObjectName("PathListWidget");
+    listWidget->setStyleSheet("#PathListWidget{background-color: rgb(200, 200, 200);}");
+    listWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    listWidget->verticalScrollBar()->adjustSize();
+    limitSize(listWidget, totalWidth + 2 + listWidget->verticalScrollBar()->width(), totalHeight);
 
 
     QVBoxLayout *layMain = new QVBoxLayout;
@@ -77,7 +81,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
     layMain->setSpacing(0);
     layMain->addLayout(layTop);
     layMain->addWidget(pathDialog);
-    layMain->addWidget(pathsView);
+    layMain->addWidget(listWidget);
     setLayout(layMain);
 
     //设置属性
@@ -101,48 +105,57 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
             while(!in.atEnd()) {
                 QString path = in.readLine().simplified().trimmed();
                 if(path != "")
-                    paths.push_back(new PathBtn(path, pathsView));
+                    newItem(path);
             }
             file.close();
         }
     }
-    pathsView->updateChildPos();
 }
 
-
-void ShortcutWidget::onBtnAddFileClicked() {
-    PATH_DIALOG(getOpenFileName);
-    pathsView->updateChildPos();
-}
-
-void ShortcutWidget::onBtnAddDirClicked() {
-    PATH_DIALOG(getExistingDirectory);
-    pathsView->updateChildPos();
-}
-
-void ShortcutWidget::onBtnAddPathClicked() {
-    pathsView->setVisible(false);
-    pathDialog->setVisible(true);
-    pathDialog->setFocusToLineEdit();
-    adjustSize();
-    pathsView->updateChildPos();
-}
-
-
-void ShortcutWidget::closeEvent(QCloseEvent *ev) {
-    if(hasChildWindow) {    //如果有关联的窗口，则不关闭
-        ev->ignore();
-        return;
-    }
-
+ShortcutWidget::~ShortcutWidget() {
     //关闭时保存路径
     QFile file("paths.txt");
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "错误", "保存路径失败");
     } else {
         QTextStream out(&file);
-        for(auto pathBtn : paths)
-            out << pathBtn->getPath() << "\n";
+        for(int i = 0; i < listWidget->count(); i++) {
+            QListWidgetItem *item = listWidget->item(i);
+            PathBtn *btn = (PathBtn*)listWidget->itemWidget(item);
+            out << btn->getPath() << "\n";
+        }
         file.close();
     }
 }
+
+
+inline void ShortcutWidget::newItem(QString path) {
+    QListWidgetItem *item = new QListWidgetItem(listWidget);
+    item->setSizeHint(QSize(PathBtn::bWidth, PathBtn::bHeight));
+    listWidget->setItemWidget(item, new PathBtn(path));
+}
+
+
+void ShortcutWidget::onBtnAddFileClicked() {
+    PATH_DIALOG(getOpenFileName);
+}
+
+void ShortcutWidget::onBtnAddDirClicked() {
+    PATH_DIALOG(getExistingDirectory);
+}
+
+void ShortcutWidget::onBtnAddPathClicked() {
+    listWidget->setVisible(false);
+    pathDialog->setVisible(true);
+    pathDialog->setFocusToLineEdit();
+    adjustSize();
+}
+
+
+void ShortcutWidget::closeEvent(QCloseEvent *ev) {
+    if(hasChildWindow) {    //如果有关联的窗口，则不关闭
+        ev->ignore();
+    }
+}
+
+

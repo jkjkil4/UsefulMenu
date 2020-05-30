@@ -5,9 +5,18 @@
 
 #include <QPainter>
 
-#define VARIBLE_FUNC(FuncName, varibleName, varibleType)\
-    varibleType get##FuncName(){return varibleName;}\
+
+
+
+#define GET_VARIBLE_FUNC(FuncName, varibleName, varibleType)\
+    varibleType get##FuncName(){return varibleName;}
+
+#define SET_VARIBLE_FUNC(FuncName, varibleName, varibleType)\
     void set##FuncName(varibleType _inputvar_){varibleName = _inputvar_;}
+
+#define VARIBLE_FUNC(FuncName, varibleName, varibleType)\
+    GET_VARIBLE_FUNC(FuncName, varibleName, varibleType)\
+    SET_VARIBLE_FUNC(FuncName, varibleName, varibleType)
 
 #define SC static constexpr
 

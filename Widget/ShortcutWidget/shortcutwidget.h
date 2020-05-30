@@ -3,12 +3,15 @@
 
 #include <QPushButton>
 #include <QLabel>
+#include <QListWidget>
 
 #include <QCloseEvent>
 
 #include "Class/autoclosewidget.h"
 
-#include "PathsView/pathsview.h"
+#include "Class/global.h"
+
+#include "PathsView/pathbtn.h"
 
 class PathDialog;
 
@@ -20,7 +23,14 @@ protected:
 
 public:
     explicit ShortcutWidget(QWidget *parent = nullptr);
-    ~ShortcutWidget() override = default;
+    ~ShortcutWidget() override;
+
+    inline void newItem(QString path);
+
+    //和大小相关的一些东西
+    SC int xNum = 6;
+    SC int totalWidth = xNum * PathBtn::bWidth;
+    SC int totalHeight = 240;
 
 public slots:
     void onBtnAddFileClicked();
@@ -28,11 +38,8 @@ public slots:
     void onBtnAddPathClicked();
 
 private:
-    QList<PathBtn*> paths;
-
     PathDialog *pathDialog = nullptr;
-    PathsView *pathsView = nullptr;
-
+    QListWidget *listWidget = new QListWidget;
 
     bool hasChildWindow = false;
 };

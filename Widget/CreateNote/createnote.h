@@ -28,7 +28,7 @@ protected:
 
 public:
     explicit CreateNote(QWidget *parent = nullptr);
-    ~CreateNote() override = default;
+    ~CreateNote() override;
 
     QString makeTitleText();
 
@@ -36,7 +36,7 @@ public slots:
     void onTextEditPointSizeChanged();
     void onTextEditTextChanged();
 
-    void onAutoWarpCheckBoxStateChanged(int state);
+    void onAutoWrapCheckBoxStateChanged(int state);
     void onKeepWindowCheckBoxStateChanged(int state);
 
     void onAcceptBtnClicked();
@@ -50,7 +50,7 @@ private:
     QLabel *labTitle = new QLabel;
 
     //是否自动换行的勾选框
-    QCheckBox *autoWarpCheckBox = new QCheckBox("自动换行");
+    QCheckBox *autoWrapCheckBox = new QCheckBox("自动换行");
     //是否固定窗口的勾选框
     QCheckBox *keepWindowCheckBox = new QCheckBox("固定窗口");
 

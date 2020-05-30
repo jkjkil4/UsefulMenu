@@ -25,7 +25,9 @@ public:
 
     bool isMouseAt();
 
-    VARIBLE_FUNC(Path, path, QString)
+    GET_VARIBLE_FUNC(Path, path, QString)
+    GET_VARIBLE_FUNC(PathIcon, pathIcon, QPixmap)
+    GET_VARIBLE_FUNC(FileName, fileName, QString)
 
     //和大小相关的一些东西
     SC int bWidth = 56;

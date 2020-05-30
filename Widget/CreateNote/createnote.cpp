@@ -11,11 +11,11 @@ CreateNote::CreateNote(QWidget *parent)
 {
     QSettings config("settings.ini", QSettings::IniFormat);
     int pointSize = config.value("CreateNote/pointSize", 10).toInt();
-    bool isAutoWarp = config.value("CreateNote/isAutoWarp", false).toBool();
+    bool isAutoWrap = config.value("CreateNote/isAutoWrap", false).toBool();
     isKeepWindow = config.value("CreateNote/isKeepWindow", true).toBool();
 
-    autoWarpCheckBox->setChecked(isAutoWarp);
-    connect(autoWarpCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onAutoWarpCheckBoxStateChanged(int)));
+    autoWrapCheckBox->setChecked(isAutoWrap);
+    connect(autoWrapCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onAutoWrapCheckBoxStateChanged(int)));
 
     keepWindowCheckBox->setChecked(isKeepWindow);
     keepWindowCheckBox->setToolTip("固定窗口\n若勾选，不会因为失去焦点而消失");
@@ -23,7 +23,7 @@ CreateNote::CreateNote(QWidget *parent)
 
 
     titleEdit->setPlaceholderText("标题");  //设置titleEdit的默认文字
-    textEdit->setLineWrapMode(((QPlainTextEdit::LineWrapMode)isAutoWarp));  //设置是否自动换行
+    textEdit->setLineWrapMode(((QPlainTextEdit::LineWrapMode)isAutoWrap));  //设置是否自动换行
     textEdit->setWordWrapMode(QTextOption::WrapAnywhere);
     setTextEditPointSize(titleEdit, 11);    //设置titleEdit的字体大小
     setTextEditPointSize(textEdit, pointSize);  //设置textEdit的字体大小
@@ -41,7 +41,7 @@ CreateNote::CreateNote(QWidget *parent)
     layTitle->setMargin(0);
     layTitle->addWidget(labTitle);
     layTitle->addStretch();
-    layTitle->addWidget(autoWarpCheckBox);
+    layTitle->addWidget(autoWrapCheckBox);
     layTitle->addWidget(keepWindowCheckBox);
 
 
@@ -79,6 +79,14 @@ CreateNote::CreateNote(QWidget *parent)
 
 }
 
+CreateNote::~CreateNote() {
+    //保存设定
+    QSettings config("settings.ini", QSettings::IniFormat);
+    config.setValue("CreateNote/pointSize", textEdit->font().pointSize());   //字符大小
+    config.setValue("CreateNote/isAutoWrap", textEdit->lineWrapMode());   //是否自动换行
+    config.setValue("CreateNote/isKeepWindow", isKeepWindow); //是否固定窗口
+}
+
 
 QString CreateNote::makeTitleText() {
     return "字体大小:" + QString::number(textEdit->font().pointSize());
@@ -95,7 +103,7 @@ void CreateNote::onTextEditTextChanged() {
 }
 
 
-void CreateNote::onAutoWarpCheckBoxStateChanged(int state) {
+void CreateNote::onAutoWrapCheckBoxStateChanged(int state) {
     textEdit->setLineWrapMode((QPlainTextEdit::LineWrapMode)state);
 }
 
@@ -150,14 +158,7 @@ void CreateNote::onCancelBtnClicked() {
 void CreateNote::closeEvent(QCloseEvent *ev) {
     if(isKeepWindow && !isCloseByBtn) {
         ev->ignore();
-        return;
     }
-
-    //保存设定
-    QSettings config("settings.ini", QSettings::IniFormat);
-    config.setValue("CreateNote/pointSize", textEdit->font().pointSize());   //字符大小
-    config.setValue("CreateNote/isAutoWarp", textEdit->lineWrapMode());   //是否自动换行
-    config.setValue("CreateNote/isKeepWindow", isKeepWindow); //是否固定窗口
 }
 
 
