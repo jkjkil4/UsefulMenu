@@ -2,6 +2,12 @@
 #define BALL_H
 
 #include <QWidget>
+
+#include <QHBoxLayout>
+#include <QMessageBox>
+
+#include <QDir>
+#include <QProcess>
 #include <QMouseEvent>
 #include <QTimer>
 

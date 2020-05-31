@@ -9,6 +9,8 @@
 #include "Class/rammonitor.h"
 #include "Class/global.h"
 
+#include "Widget/GetScreen/GetScreenSettings/getscreensettings.h"
+
 #include <QDebug>
 
 Ball::Ball(QWidget *parent) : QWidget(parent) {
@@ -54,28 +56,77 @@ void Ball::mouseMoveEvent(QMouseEvent *ev) {
     ev->ignore();
 }
 
+#define FUNC_MAP QMap<QAction*, void (*)(Ball *self)>
 void Ball::mouseReleaseEvent(QMouseEvent *ev) {
     switch((int)ev->button()) {
     case Qt::LeftButton:
         emit wndShowExpand();
         break;
     case Qt::RightButton:{
+        QMenu mainMenu;
+        FUNC_MAP funcMap;
+
+
+        //截图
+        QMenu menuGetScreen("截图");
+        mainMenu.addMenu(&menuGetScreen);
+
+        QAction actGetScreenOpenDir("打开截图文件夹");
+        menuGetScreen.addAction(&actGetScreenOpenDir);
+        funcMap[&actGetScreenOpenDir] = [](Ball *){
+            QDir dir;
+            if( !dir.exists("ScreenShot/") )
+                dir.mkpath("ScreenShot/");
+            QProcess::startDetached("cmd.exe",
+                QStringList() << "/c" << "start ScreenShot" );
+        };
+
+        QAction actGetScreenClearImage("清除截图目录下的图像");
+        menuGetScreen.addAction(&actGetScreenClearImage);
+        funcMap[&actGetScreenClearImage] = [](Ball *self){
+            int res = QMessageBox::information(self, "提示", "确认清除截图目录的图像?", QMessageBox::Ok, QMessageBox::Cancel);
+            if(res == QMessageBox::Ok) {
+                QDir dir;
+                if(dir.exists("ScreenShot/"))
+                    if(!dir.cd("ScreenShot/"))
+                        return;
+                QStringList images = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+                for(auto image : images) {
+                    dir.remove(image);
+                }
+            }
+        };
+
+        QAction actGetScreenSettings("设置");
+        menuGetScreen.addAction(&actGetScreenSettings);
+        funcMap[&actGetScreenSettings] = [](Ball *){
+            GetScreenSettings *settings = new GetScreenSettings;
+            settings->setVisible(true);
+        };
+
+
+        //退出
         QAction actExit("退出");
+        mainMenu.addAction(&actExit);
+        funcMap[&actExit] = [](Ball *self){
+            emit self->closeWidget();
+        };
 
-        QMenu menu;
-        menu.addAction(&actExit);
 
-        menu.move(cursor().pos());
-        QAction *res = menu.exec();
+        mainMenu.move(cursor().pos());
+        QAction *res = mainMenu.exec();
 
-        if(res == &actExit) {
-            emit closeWidget();
+        FUNC_MAP::iterator result = funcMap.find(res);
+        if(result != funcMap.end()) {
+            (*result)(this);
         }
 
         break;
     }
     }
+
 }
+#undef FUNC_MAP
 
 void Ball::paintEvent(QPaintEvent *) {
     QPainter p(this);

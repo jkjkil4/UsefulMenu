@@ -38,6 +38,7 @@ SOURCES += \
         Widget/GetScreen/Area/horarea.cpp \
         Widget/GetScreen/Area/verarea.cpp \
         Widget/GetScreen/ButtonMenu/buttonmenu.cpp \
+        Widget/GetScreen/GetScreenSettings/getscreensettings.cpp \
         Widget/GetScreen/ImgView/imgview.cpp \
         Widget/GetScreen/getscreen.cpp \
         Widget/ShortcutWidget/PathDialog/pathdialog.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
         Widget/GetScreen/Area/horarea.h \
         Widget/GetScreen/Area/verarea.h \
         Widget/GetScreen/ButtonMenu/buttonmenu.h \
+        Widget/GetScreen/GetScreenSettings/getscreensettings.h \
         Widget/GetScreen/ImgView/imgview.h \
         Widget/GetScreen/getscreen.h \
         Widget/ShortcutWidget/PathDialog/pathdialog.h \
