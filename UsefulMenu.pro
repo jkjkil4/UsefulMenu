@@ -30,8 +30,13 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     Widget/ButtonTable/buttontable.cpp \
-    Widget/ButtonTable/buttontableitem.cpp \
     widget.cpp
+
+HEADERS += \
+    Widget/ButtonTable/buttontable.h \
+    Widget/ButtonTable/buttontableitem.h \
+    namespace.h \
+    widget.h
 
 
 # Default rules for deployment.
@@ -43,11 +48,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include( $$PWD/../../_1Classes/JQCPUMonitor/JQLibrary/JQCPUMonitor.pri )
 include( $$PWD/../../_1Classes/qxtglobalshortcut5-master/qxt.pri )
 
-RESOURCES += \
-    resource.qrc
 
-HEADERS += \
-    Widget/ButtonTable/buttontable.h \
-    Widget/ButtonTable/buttontableitem.h \
-    namespace.h \
-    widget.h

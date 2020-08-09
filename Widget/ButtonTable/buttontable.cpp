@@ -2,7 +2,17 @@
 
 ButtonTable::ButtonTable(QWidget *parent) : QWidget(parent)
 {
+    repeat(i, 40) {
+        addItem(new ButtonTableItem);
+    }
 
+    connect(timerUpdateOffset, SIGNAL(timeout()), this, SLOT(onTimerUpdateOffset()));
+
+    timerUpdate->setSingleShot(true);
+    connect(timerUpdate, &QTimer::timeout, [=]{ update(); });
+
+    setMouseTracking(true);
+    adjustWidth();
 }
 
 ButtonTable::~ButtonTable() {
@@ -12,25 +22,113 @@ ButtonTable::~ButtonTable() {
 }
 
 
+void ButtonTable::onTimerUpdateOffset() {
+    if (spd != 0) {
+        //sumSpdToOffset
+        yOffset += spd;
+        if (spd > 0) {
+            spd -= 1;
+            if (spd < 0)
+                spd = 0;
+        }
+        else if (spd < 0) {
+            spd += 1;
+            if (spd > 0)
+                spd = 0;
+        }
+    }
+
+    bool isMoving = false;
+    int min = qMin<int>(height() - ((btnHeight + btnSpacing) * (vItems.size() / btnXCount) + 2 * margin - btnSpacing), 0);
+    if (yOffset > 0 || yOffset < min) {
+        //isMoving = limitOffset(min);
+        //limitOffset
+        if (yOffset > 0) {
+            int limitSpd = 2 + yOffset / 4;
+            yOffset -= limitSpd;
+            if (yOffset < 0)
+                yOffset = 0;
+            isMoving = true;
+        } else if (yOffset < min) {
+            int limitSpd = 2 + (min - yOffset) / 4;
+            yOffset += limitSpd;
+            if (yOffset > min)
+                yOffset = min;
+            isMoving = true;
+        } else isMoving = false;
+    }
+
+    mouseIndex = getIndex(mapFromGlobal(cursor().pos()));
+    startTimerUpdate();
+
+    if(spd == 0 && !isMoving)
+        timerUpdateOffset->stop();
+}
+
+
 void ButtonTable::mousePressEvent(QMouseEvent *ev) {
-    mouseIndex = getIndex(ev->pos());
-    isHolding = true;
+    if(ev->button() == Qt::LeftButton) {
+        isHolding = true;
+        mouseIndex = getIndex(ev->pos());
+
+        startTimerUpdate();
+    }
 }
 
 void ButtonTable::mouseMoveEvent(QMouseEvent *ev) {
+    if(!(ev->buttons() & Qt::LeftButton))
+        mouseIndex = getIndex(ev->pos());
 
+    startTimerUpdate();
 }
 
 void ButtonTable::mouseReleaseEvent(QMouseEvent *ev) {
-    isHolding = false;
+    if(ev->button() == Qt::LeftButton) {
+        isHolding = false;
+        mouseIndex = getIndex(ev->pos());
+
+        startTimerUpdate();
+    }
 }
 
 void ButtonTable::wheelEvent(QWheelEvent *ev) {
-    yOffset += ev->y() / 20;
+    int num = ev->delta() / 20;
+    if ((spd < 0 && num > 0) || (spd > 0 && num < 0))
+            spd = 0;
+    spd += num;
+    if (abs(spd) > 8)
+        spd > 0 ? spd = 8 : spd = -8;
+
+    if(!timerUpdateOffset->isActive())
+            timerUpdateOffset->start(16);
+
+    startTimerUpdate();
 }
 
 void ButtonTable::paintEvent(QPaintEvent*) {
+    QPainter p(this);
+    p.fillRect(0, 0, width(), height(), QColor(102, 204, 255, 160));
 
+    int yPosBegin = -yOffset / (btnHeight + btnSpacing);
+    int yPosEnd = (height() - yOffset) / (btnHeight + btnSpacing);
+    qDebug() << yOffset << yPosBegin << yPosEnd;
+    int iBegin = qMax(0, yPosBegin * btnXCount);
+    int iEnd = qBound(0, (yPosEnd + 1) * btnXCount, vItems.size());
+    for(int i = iBegin; i < iEnd; i++) {
+        ButtonTableItem* item = vItems[i];
+
+        int rectX = margin + (btnWidth + btnSpacing) * (i % btnXCount);
+        int rectY = margin + (btnHeight + btnSpacing) * (i / btnXCount);
+
+        ButtonTableItem::ButtonFlag flag = ButtonTableItem::ButtonFlag::None;
+        if(mouseIndex == i) {
+            flag = isHolding
+                    ? ButtonTableItem::ButtonFlag::MouseHolding
+                    : ButtonTableItem::ButtonFlag::MouseAt;
+        }
+
+        item->onPaint(p, QRect(rectX, rectY + yOffset, btnWidth, btnHeight), flag);
+    }
 }
 
 
@@ -54,7 +152,7 @@ int ButtonTable::getIndex(QPoint mouse) {
         return -1;  //返回-1
 
     int xPos = (mouse.x() - margin) / (btnWidth + btnSpacing);
-    if(xPos > btnXCount)
+    if(xPos >= btnXCount)
         return -1;
     int yPos = (mouse.y() - yOffset - margin) / (btnHeight + btnSpacing);
 
@@ -63,4 +161,9 @@ int ButtonTable::getIndex(QPoint mouse) {
         return -1;
 
     return index;
+}
+
+void ButtonTable::startTimerUpdate() {
+    if(!timerUpdate->isActive())
+        timerUpdate->start(timerDelayMs);
 }
