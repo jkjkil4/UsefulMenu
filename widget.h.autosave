@@ -9,9 +9,7 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = nullptr);
 
-signals:
-
-public slots:
+    
 };
 
 #endif // WIDGET_H

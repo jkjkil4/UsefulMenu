@@ -1,8 +1,6 @@
 #ifndef NAMESPACE_H
 #define NAMESPACE_H
 
-
-#define DEC_CLASS(ClassName) namespace My {class ClassName;}
-
+#define SC static constexpr
 
 #endif // NAMESPACE_H

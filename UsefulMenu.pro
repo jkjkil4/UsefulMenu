@@ -28,57 +28,26 @@ DEFINES += WIN32_LEAN_AND_MEAN
 
 CONFIG += c++11
 
-SOURCES += \
-        Class/autoclosewidget.cpp \
-        Class/iconbtn.cpp \
-        Class/line.cpp \
-        Widget/CreateNote/TextEditEx/plaintexteditex.cpp \
-        Widget/CreateNote/createnote.cpp \
-        Widget/GetScreen/Area/areapoint.cpp \
-        Widget/GetScreen/Area/horarea.cpp \
-        Widget/GetScreen/Area/verarea.cpp \
-        Widget/GetScreen/ButtonMenu/buttonmenu.cpp \
-        Widget/GetScreen/GetScreenSettings/getscreensettings.cpp \
-        Widget/GetScreen/ImgView/imgview.cpp \
-        Widget/GetScreen/getscreen.cpp \
-        Widget/ShortcutWidget/PathDialog/pathdialog.cpp \
-        Widget/ShortcutWidget/PathsView/pathbtn.cpp \
-        Widget/ShortcutWidget/shortcutwidget.cpp \
-        Widget/ball.cpp \
-        Widget/btnlist.cpp \
-        main.cpp \
-        Class/rammonitor.cpp \
-        widget.cpp
+SOURCES += main.cpp \
+    Widget/ButtonTable/buttontable.cpp \
+    Widget/ButtonTable/buttontableitem.cpp \
+    widget.cpp
 
-HEADERS += \
-        Class/autoclosewidget.h \
-        Class/iconbtn.h \
-        Class/line.h \
-        Widget/CreateNote/TextEditEx/plaintexteditex.h \
-        Widget/CreateNote/createnote.h \
-        Widget/GetScreen/Area/areaparent.h \
-        Widget/GetScreen/Area/areapoint.h \
-        Widget/GetScreen/Area/horarea.h \
-        Widget/GetScreen/Area/verarea.h \
-        Widget/GetScreen/ButtonMenu/buttonmenu.h \
-        Widget/GetScreen/GetScreenSettings/getscreensettings.h \
-        Widget/GetScreen/ImgView/imgview.h \
-        Widget/GetScreen/getscreen.h \
-        Widget/ShortcutWidget/PathDialog/pathdialog.h \
-        Widget/ShortcutWidget/PathsView/pathbtn.h \
-        Widget/ShortcutWidget/shortcutwidget.h \
-        Widget/ball.h \
-        Class/global.h \
-        Class/rammonitor.h \
-        Widget/btnlist.h \
-        widget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+# include
 include( $$PWD/../../_1Classes/JQCPUMonitor/JQLibrary/JQCPUMonitor.pri )
+include( $$PWD/../../_1Classes/qxtglobalshortcut5-master/qxt.pri )
 
 RESOURCES += \
     resource.qrc
+
+HEADERS += \
+    Widget/ButtonTable/buttontable.h \
+    Widget/ButtonTable/buttontableitem.h \
+    namespace.h \
+    widget.h
