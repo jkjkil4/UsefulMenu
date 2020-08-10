@@ -29,12 +29,12 @@ DEFINES += WIN32_LEAN_AND_MEAN
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    extensionitem.cpp \
+    Class/extensionitem.cpp \
     widget.cpp
 
 HEADERS += \
-    extensionitem.h \
-    libmanager.h \
+    Class/extensionitem.h \
+    Class/libmanager.h \
     namespace.h \
     widget.h
 

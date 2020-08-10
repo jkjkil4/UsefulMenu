@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "namespace.h"
-#include "extensionitem.h"
+#include "Class/extensionitem.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
