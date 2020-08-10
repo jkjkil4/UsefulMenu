@@ -1,0 +1,12 @@
+#ifndef STATEBALL_GLOBAL_H
+#define STATEBALL_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(STATEBALL_LIBRARY)
+#  define STATEBALLSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define STATEBALLSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // STATEBALL_GLOBAL_H

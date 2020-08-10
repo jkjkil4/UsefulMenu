@@ -30,13 +30,13 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     Class/extensionitem.cpp \
-    widget.cpp
+    mainwidget.cpp
 
 HEADERS += \
     Class/extensionitem.h \
     Class/libmanager.h \
-    namespace.h \
-    widget.h
+    mainwidget.h \
+    namespace.h
 
 
 # Default rules for deployment.

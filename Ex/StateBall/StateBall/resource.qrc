@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/StateBall">
+        <file>Resource/StateBall.png</file>
+    </qresource>
+</RCC>

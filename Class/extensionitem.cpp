@@ -2,12 +2,17 @@
 
 ExtensionItem::ExtensionItem(LibManager libManager)
     : libManager(libManager) {}
-#include <QDebug>
-void ExtensionItem::onPaint(QPainter &p, QRect r, ButtonFlag flag) {
-    ButtonTableItem::onPaint(p, r, flag);
 
+void ExtensionItem::onPaint(QPainter &p, QRect r, ButtonFlag flag) {
     QRegion prevRegion = p.clipRegion();
     p.setClipRect(r);
+
+    static constexpr QRgb baseColor = qRgb(116, 212, 116);
+    switch(flag) {
+    case ButtonFlag::None: p.fillRect(r, QColor(baseColor)); break;
+    case ButtonFlag::MouseAt: p.fillRect(r, QColor(baseColor).lighter(115)); break;
+    case ButtonFlag::MouseHolding: p.fillRect(r, QColor(baseColor).darker(115)); break;
+    }
 
     if(libManager.libPixmap.isNull()) {
         p.drawText(r, Qt::AlignCenter | Qt::AlignVCenter, libManager.libName);
@@ -16,18 +21,17 @@ void ExtensionItem::onPaint(QPainter &p, QRect r, ButtonFlag flag) {
 
         int totalHeight = libPixmap.height();
 
+        static constexpr int spacing = 2;
         QFontMetrics fm(p.font());
-        totalHeight += fm.height();
+        totalHeight += spacing + fm.height();
 
         int pixmapX = (r.width() - libPixmap.width()) / 2;
         int pixmapY = (r.height() - totalHeight) / 2;
         p.drawPixmap(r.x() + pixmapX, r.y() + pixmapY, libPixmap);
 
-        int offset = pixmapY + libPixmap.height();
-        qDebug() << r;
+        int offset = pixmapY + libPixmap.height() + spacing;
         r.setY(r.y() + offset);
         r.setHeight(fm.height());
-        qDebug() << r << "\n";
 
         p.drawText(r, Qt::AlignCenter | Qt::AlignTop, libManager.libName);
     }

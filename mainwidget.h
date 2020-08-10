@@ -10,17 +10,20 @@
 #include <QVBoxLayout>
 
 #include <QDir>
-#include <QTime>
+#include <QGuiApplication>
+#include <QScreen>
 
-class Widget : public QWidget
+class MainWidget : public QWidget
 {
     Q_OBJECT
 protected:
-    void paintEvent(QPaintEvent*) override;
+    //void paintEvent(QPaintEvent*) override;
 
 public:
-    explicit Widget(QWidget *parent = nullptr);
-    ~Widget() override = default;
+    explicit MainWidget(QWidget *parent = nullptr);
+    ~MainWidget() override = default;
+
+    void moveToProperPos();
 
 private slots:
     void onBtnTableClicked(void* item);

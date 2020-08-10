@@ -1,13 +1,12 @@
-#include "widget.h"
+#include "mainwidget.h"
+
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    //DEC_BUTTONTABLEITEM_METATYPE;
-
-    Widget w;
+    MainWidget w;
     w.show();
 
     return a.exec();
