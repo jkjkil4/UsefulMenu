@@ -3,10 +3,14 @@
 
 #include <QWidget>
 
-#include "Widget/ButtonTable/buttontable.h"
+#include "namespace.h"
+
+#include "buttontable.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+
+#include <QLibrary>
 
 class Widget : public QWidget
 {
@@ -16,9 +20,12 @@ protected:
 
 public:
     explicit Widget(QWidget *parent = nullptr);
+    ~Widget() override = default;
 
 private:
-    ButtonTable* btnTable = new ButtonTable(this);
+    ButtonTable* btnTable = new ButtonTable;
+
+    QVector<QLibrary> vLibs;
 };
 
 #endif // WIDGET_H

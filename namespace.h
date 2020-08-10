@@ -3,6 +3,8 @@
 
 #include <QPainter>
 
+#include <QDebug>
+
 #define SC static constexpr
 
 #define repeat(v, n) for(int v = 0; v < n; v++)

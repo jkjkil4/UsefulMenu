@@ -1,2 +1,4 @@
 
-/UsefulMenu.pro.user
+*.user
+/Libs/ButtonTable/build-ButtonTable-Desktop_Qt_5_13_0_MinGW_64_bit-Release
+

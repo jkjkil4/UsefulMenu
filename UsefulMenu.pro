@@ -29,12 +29,9 @@ DEFINES += WIN32_LEAN_AND_MEAN
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    Widget/ButtonTable/buttontable.cpp \
     widget.cpp
 
 HEADERS += \
-    Widget/ButtonTable/buttontable.h \
-    Widget/ButtonTable/buttontableitem.h \
     namespace.h \
     widget.h
 
@@ -49,3 +46,11 @@ include( $$PWD/../../_1Classes/JQCPUMonitor/JQLibrary/JQCPUMonitor.pri )
 include( $$PWD/../../_1Classes/qxtglobalshortcut5-master/qxt.pri )
 
 
+# ButtonTable
+win32: LIBS += -L$$PWD/Libs/ -lButtonTable
+
+INCLUDEPATH += $$PWD/Libs/ButtonTable/ButtonTable
+DEPENDPATH += $$PWD/Libs/ButtonTable/ButtonTable
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/Libs/ButtonTable.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/Libs/libButtonTable.a
