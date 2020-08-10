@@ -11,6 +11,17 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
 
     //创建控件
+    MenuBar* menuBar = new MenuBar;
+    menuBar->setObjectName("MenuBar");
+    menuBar->setStyleSheet("#MenuBar{background-color:rgb();}");
+    menuBar->setMaximumHeight(26);
+    menuBar->setMinimumHeight(26);
+    connect(menuBar, &MenuBar::wndClose, [=]{ verifyClose(); });
+    connect(menuBar, &MenuBar::wndHide, [=]{ hide(); });
+    connect(menuBar, &MenuBar::wndMoveOffset, [=](int xOffset, int yOffset){
+        move(x() + xOffset, y() + yOffset);
+    });
+
     connect(btnTable, SIGNAL(clicked(void*)), this, SLOT(onBtnTableClicked(void*)));
     for(QLibrary* lib : vLibs) {
         auto item = new ExtensionItem(lib);
@@ -18,8 +29,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     }
 
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->setMargin(1);
+    layout->setMargin(2);
     layout->setSpacing(0);
+    layout->addWidget(menuBar);
     layout->addWidget(btnTable);
     setLayout(layout);
 
@@ -27,7 +39,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     //设置窗口属性
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::SubWindow);
     setAttribute(Qt::WA_TranslucentBackground, true);
-    setAttribute(Qt::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_QuitOnClose, true);
 
 
     //调整大小
@@ -49,14 +61,20 @@ void MainWidget::moveToProperPos() {
     move(toX, toY);
 }
 
+void MainWidget::verifyClose() {
+    int res = QMessageBox::information(this, "提示", "确认要退出吗", QMessageBox::Yes, QMessageBox::No);
+    if(res == QMessageBox::Yes)
+        close();
+}
+
 void MainWidget::onBtnTableClicked(void *item) {
     //setVisible(false);
     ExtensionItem* extension = (ExtensionItem*)item;
     extension->libManager.fMain();
 }
 
-//void MainWidget::paintEvent(QPaintEvent *){
-//    QPainter p(this);
-//    jDrawRecFrame(p, 0, 0, width(), height(), layout()->margin(), QColor(102, 204, 255));
-//}
+void MainWidget::paintEvent(QPaintEvent *){
+    QPainter p(this);
+    jDrawRecFrame(p, 0, 0, width(), height(), layout()->margin(), QColor(102, 204, 255));
+}
 

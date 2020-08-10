@@ -30,11 +30,15 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     Class/extensionitem.cpp \
+    Widget/iconbtn.cpp \
+    Widget/menubar.cpp \
     mainwidget.cpp
 
 HEADERS += \
     Class/extensionitem.h \
     Class/libmanager.h \
+    Widget/iconbtn.h \
+    Widget/menubar.h \
     mainwidget.h \
     namespace.h
 
@@ -57,3 +61,6 @@ DEPENDPATH += $$PWD/Libs/ButtonTable/ButtonTable
 
 win32:!win32-g++: PRE_TARGETDEPS += $$PWD/Libs/ButtonTable.lib
 else:win32-g++: PRE_TARGETDEPS += $$PWD/Libs/libButtonTable.a
+
+RESOURCES += \
+    resource.qrc

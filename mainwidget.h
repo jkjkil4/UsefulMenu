@@ -3,10 +3,12 @@
 
 #include <QWidget>
 
+#include <QMessageBox>
+
 #include "namespace.h"
 #include "Class/extensionitem.h"
+#include "Widget/menubar.h"
 
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 
 #include <QDir>
@@ -17,13 +19,15 @@ class MainWidget : public QWidget
 {
     Q_OBJECT
 protected:
-    //void paintEvent(QPaintEvent*) override;
+    void paintEvent(QPaintEvent*) override;
 
 public:
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget() override = default;
 
     void moveToProperPos();
+
+    void verifyClose();
 
 private slots:
     void onBtnTableClicked(void* item);

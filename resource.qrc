@@ -1,13 +1,6 @@
 <RCC>
-    <qresource prefix="/funcBtn">
-        <file>Resource/cut.png</file>
-        <file>Resource/fast.png</file>
-        <file>Resource/note.png</file>
-    </qresource>
-    <qresource prefix="/getScreenBtn">
-        <file>Resource/save1.png</file>
-        <file>Resource/save2.png</file>
-        <file>Resource/cancel.png</file>
-        <file>Resource/accept.png</file>
+    <qresource prefix="/MainWidgetBtn">
+        <file>Resource/Exit.png</file>
+        <file>Resource/min.png</file>
     </qresource>
 </RCC>
