@@ -4,13 +4,13 @@
 #include <QWidget>
 
 #include "namespace.h"
-
-#include "buttontable.h"
+#include "extensionitem.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include <QLibrary>
+#include <QDir>
+#include <QTime>
 
 class Widget : public QWidget
 {
@@ -22,10 +22,13 @@ public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget() override = default;
 
+private slots:
+    void onBtnTableClicked(void* item);
+
 private:
     ButtonTable* btnTable = new ButtonTable;
 
-    QVector<QLibrary> vLibs;
+    QVector<QLibrary*> vLibs;
 };
 
 #endif // WIDGET_H

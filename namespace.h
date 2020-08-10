@@ -11,7 +11,7 @@
 
 //#define MOD(a, b) a >= 0 ? a % b : -(-a % b)
 
-inline void jDrawRecFrame(QPainter& p,int x,int y,int w,int h,int width,QColor c){
+inline void jDrawRecFrame(QPainter& p, int x, int y, int w, int h, int width, QColor c){
     //顶部
     p.fillRect(x, y, w, width, c);
     //左侧

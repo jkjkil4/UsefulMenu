@@ -118,7 +118,7 @@ void ButtonTable::mouseReleaseEvent(QMouseEvent *ev) {
             int rectX = margin + xPos * (btnWidth + spacing);
             int rectY = margin + yPos * (btnHeight + spacing);
             if(QRect(rectX, rectY + yOffset, btnWidth, btnHeight).contains(ev->pos())) {
-                emit clicked(vItems[mouseIndex]);
+                emit clicked((void*)vItems[mouseIndex]);
             }
         }
 

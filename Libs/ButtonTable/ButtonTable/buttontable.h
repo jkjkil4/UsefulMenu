@@ -32,7 +32,8 @@ public:
         p.fillRect(r, dwColor);
     }
 };
-
+//Q_DECLARE_METATYPE(ButtonTableItem);
+//#define DEC_BUTTONTABLEITEM_METATYPE qRegisterMetaType<ButtonTableItem>("ButtonTableItem");
 
 class ButtonTable : public QWidget
 {
@@ -70,7 +71,7 @@ public:
     void setMargin(int value);
 
 signals:
-    void clicked(ButtonTableItem*);
+    void clicked(void*);
 
 private slots:
     void onTimerUpdateOffset();

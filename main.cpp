@@ -4,6 +4,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    //DEC_BUTTONTABLEITEM_METATYPE;
+
     Widget w;
     w.show();
 
