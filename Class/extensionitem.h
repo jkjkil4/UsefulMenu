@@ -5,8 +5,6 @@
 
 #include "libmanager.h"
 
-#include <QFileInfo>
-
 class ExtensionItem : public ButtonTableItem
 {
 public:

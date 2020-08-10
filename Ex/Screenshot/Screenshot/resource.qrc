@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/ScreenshotBtn">
+        <file>Resource/save1.png</file>
+        <file>Resource/save2.png</file>
+        <file>Resource/cancel.png</file>
+        <file>Resource/accept.png</file>
+    </qresource>
+    <qresource prefix="/Screenshot">
+        <file>Resource/Screenshot.png</file>
+    </qresource>
+</RCC>

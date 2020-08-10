@@ -35,11 +35,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent)
 }
 
 void Widget::onBtnTableClicked(void *item) {
-    QTime t;
-    t.start();
+    setVisible(false);
     ExtensionItem* extension = (ExtensionItem*)item;
-    extension->libManager.fNewHandle();
-    qDebug() << t.elapsed();
+    extension->libManager.fMain();
 }
 
 void Widget::paintEvent(QPaintEvent *){

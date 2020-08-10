@@ -23,9 +23,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        Area/areapoint.cpp \
+        Area/horarea.cpp \
+        Area/verarea.cpp \
+        ButtonMenu/buttonmenu.cpp \
+        IconBtn/iconbtn.cpp \
+        ImgView/imgview.cpp \
+        Line/line.cpp \
         screenshot.cpp
 
 HEADERS += \
+        Area/areaparent.h \
+        Area/areapoint.h \
+        Area/horarea.h \
+        Area/verarea.h \
+        ButtonMenu/buttonmenu.h \
+        IconBtn/iconbtn.h \
+        ImgView/imgview.h \
+        Line/line.h \
+        header.h \
         screenshot.h \
         screenshot_global.h 
 
@@ -33,3 +49,6 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+RESOURCES += \
+    resource.qrc
