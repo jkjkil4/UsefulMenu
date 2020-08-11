@@ -3,6 +3,9 @@
 
 #include <QWidget>
 
+#include <QAction>
+#include <QMenu>
+
 #include <QMessageBox>
 
 #include "namespace.h"
@@ -12,7 +15,9 @@
 #include <QVBoxLayout>
 
 #include <QDir>
+#include <QApplication>
 #include <QGuiApplication>
+#include <QSystemTrayIcon>
 #include <QScreen>
 
 class MainWidget : public QWidget
@@ -31,9 +36,12 @@ public:
 
 private slots:
     void onBtnTableClicked(void* item);
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
     ButtonTable* btnTable = new ButtonTable;
+
+    QSystemTrayIcon* trayIcon;
 
     QVector<QLibrary*> vLibs;
 };

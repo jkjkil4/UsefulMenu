@@ -3,4 +3,7 @@
         <file>Resource/Exit.png</file>
         <file>Resource/min.png</file>
     </qresource>
+    <qresource prefix="/MainWidget">
+        <file>A.ico</file>
+    </qresource>
 </RCC>

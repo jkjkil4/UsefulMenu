@@ -19,7 +19,12 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     connect(menuBar, &MenuBar::wndClose, [=]{ verifyClose(); });
     connect(menuBar, &MenuBar::wndHide, [=]{ hide(); });
     connect(menuBar, &MenuBar::wndMoveOffset, [=](int xOffset, int yOffset){
-        move(x() + xOffset, y() + yOffset);
+        int toX = x() + xOffset, toY = y() + yOffset;
+
+        QRect screenRect =  QGuiApplication::primaryScreen()->availableVirtualGeometry();
+        toX = qBound(0, toX, screenRect.width() - width());
+        toY = qBound(0, toY, screenRect.height() - height());
+        move(toX, toY);
     });
 
     connect(btnTable, SIGNAL(clicked(void*)), this, SLOT(onBtnTableClicked(void*)));
@@ -34,6 +39,24 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     layout->addWidget(menuBar);
     layout->addWidget(btnTable);
     setLayout(layout);
+
+
+    //创建系统托盘图标
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {      //判断系统是否支持系统托盘图标
+        QMessageBox::information(this, "提示", "系统不支持托盘图标");
+    } else {
+        QAction* actExit = new QAction("退出(&Q)");
+        connect(actExit, &QAction::triggered, [=]{ verifyClose(); });
+
+        QMenu* menu = new QMenu((QWidget*)QApplication::desktop());
+        menu->addAction(actExit);
+
+        trayIcon = new QSystemTrayIcon(this);
+        trayIcon->setIcon(QIcon(":/MainWidget/A.ico"));
+        trayIcon->setContextMenu(menu);     //设置托盘菜单
+        trayIcon->show();
+        connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    }
 
 
     //设置窗口属性
@@ -62,6 +85,7 @@ void MainWidget::moveToProperPos() {
 }
 
 void MainWidget::verifyClose() {
+    setVisible(true);
     int res = QMessageBox::information(this, "提示", "确认要退出吗", QMessageBox::Yes, QMessageBox::No);
     if(res == QMessageBox::Yes)
         close();
@@ -71,6 +95,18 @@ void MainWidget::onBtnTableClicked(void *item) {
     //setVisible(false);
     ExtensionItem* extension = (ExtensionItem*)item;
     extension->libManager.fMain();
+}
+
+void MainWidget::iconActivated(QSystemTrayIcon::ActivationReason reason) {
+    switch(reason) {
+    case QSystemTrayIcon::DoubleClick:
+        setVisible(true);
+        moveToProperPos();
+        break;
+    default:
+
+        break;
+    }
 }
 
 void MainWidget::paintEvent(QPaintEvent *){
