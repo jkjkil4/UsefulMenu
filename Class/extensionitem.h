@@ -8,7 +8,7 @@
 class ExtensionItem : public ButtonTableItem
 {
 public:
-    ExtensionItem(LibManager libManager);
+    ExtensionItem(const LibManager& libManager);
 
     void onPaint(QPainter& p, QRect r, ButtonFlag flag);
 

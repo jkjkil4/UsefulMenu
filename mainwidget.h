@@ -33,12 +33,19 @@ protected:
     void paintEvent(QPaintEvent*) override;
 
 public:
+    struct Lib {
+        QLibrary* lib;
+        bool isEnabled;
+    };
+
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget() override;
 
     void moveToProperPos();
 
     void verifyClose();
+
+    void addLibsToBtnTable();
 
 private slots:
     void onBtnTableClicked(void* item);
@@ -49,7 +56,20 @@ private:
 
     QSystemTrayIcon* trayIcon;
 
-    QVector<QLibrary*> vLibs;
+    QVector<Lib> vLibs;
 };
+
+inline QString getLibFileName(QLibrary* lib) {
+    QString libName = QFileInfo(lib->fileName()).fileName();
+    return libName.left(libName.lastIndexOf('.'));
+}
+
+inline int getLibOrder(const QMap<QString, int> &map, QLibrary *lib) {
+    auto iter = map.find(getLibFileName(lib));
+    if(iter == map.end())
+        return 0;
+
+    return *iter;
+}
 
 #endif // WIDGET_H

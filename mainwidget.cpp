@@ -13,17 +13,43 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
         setVisible(true);
     });
 
+    //读取哪些库被禁用了
+    QVector<QString> vDisabledLib;
+    QFile fileDisabledLib("Config/DisabledLib");
+    if(fileDisabledLib.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&fileDisabledLib);
+        while(!in.atEnd()) {
+            vDisabledLib.append(in.readLine());
+        }
+        fileDisabledLib.close();
+    }
+
     //读取库
     QDir dir("Extensions");
     QStringList extensions = dir.entryList(QDir::Files);
     for(QString& extension : extensions) {
-        vLibs.append(new QLibrary("Extensions/" + extension, this));
+        QLibrary* lib = new QLibrary("Extensions/" + extension, this);
+        vLibs.append({lib, !vDisabledLib.contains(getLibFileName(lib))});
     }
+
+    //读取库顺序
+    QMap<QString, int> libOrderMap;
+    QFile fileLibOrder("Config/LibOrder");
+    if(fileLibOrder.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        int order = 1;
+        QTextStream in(&fileLibOrder);
+        while(!in.atEnd()) {
+            libOrderMap[in.readLine()] = order;
+            order++;
+        }
+        fileLibOrder.close();
+    }
+
+    //对库进行排序
+    std::sort(vLibs.begin(), vLibs.end(), [=](Lib& a, Lib& b) -> bool { return getLibOrder(libOrderMap, a.lib) > getLibOrder(libOrderMap, b.lib); });
 
     //创建控件
     MenuBar* menuBar = new MenuBar;
-    menuBar->setObjectName("MenuBar");
-    menuBar->setStyleSheet("#MenuBar{background-color:rgb();}");
     menuBar->setMaximumHeight(26);
     menuBar->setMinimumHeight(26);
     connect(menuBar, &MenuBar::wndClose, [=]{ verifyClose(); });
@@ -38,10 +64,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     });
 
     connect(btnTable, SIGNAL(clicked(void*)), this, SLOT(onBtnTableClicked(void*)));
-    for(QLibrary* lib : vLibs) {
-        auto item = new ExtensionItem(lib);
-        btnTable->addItem(item);
-    }
+    addLibsToBtnTable();
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->setMargin(2);
@@ -90,6 +113,36 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 MainWidget::~MainWidget() {
     QSettings config("Config/UsefulMenu.ini", QSettings::IniFormat);
     config.setValue("config/GlobalShortcut", globalShortcut->shortcut().toString());
+
+    //记录被禁用的库
+    QFile fileDisabledLib("Config/DisabledLib");
+    if(fileDisabledLib.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&fileDisabledLib);
+        bool hasPrev = false;
+        for(auto& lib : vLibs) {
+            if(!lib.isEnabled) {
+                if(hasPrev)
+                    out << '\n';
+                else hasPrev = true;
+                out << getLibFileName(lib.lib);
+            }
+        }
+        fileDisabledLib.close();
+    }
+
+    //记录库的顺序
+    QFile fileLibOrder("Config/LibOrder");
+    if(fileLibOrder.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&fileLibOrder);
+        bool hasPrev = false;
+        for(auto iter = vLibs.rbegin(); iter < vLibs.rend(); iter++) {
+            if(hasPrev)
+                out << '\n';
+            else hasPrev = true;
+            out << getLibFileName((*iter).lib);
+        }
+        fileLibOrder.close();
+    }
 }
 
 void MainWidget::moveToProperPos() {
@@ -109,6 +162,16 @@ void MainWidget::verifyClose() {
     int res = QMessageBox::information(this, "提示", "确认要退出吗", QMessageBox::Yes, QMessageBox::No);
     if(res == QMessageBox::Yes)
         close();
+}
+
+void MainWidget::addLibsToBtnTable() {
+    btnTable->clearItem();
+    for(auto& lib : vLibs) {
+        if(lib.isEnabled) {
+            auto item = new ExtensionItem(lib.lib);
+            btnTable->addItem(item);
+        }
+    }
 }
 
 void MainWidget::onBtnTableClicked(void *item) {

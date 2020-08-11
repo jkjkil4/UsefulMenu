@@ -137,8 +137,7 @@ void ButtonTable::wheelEvent(QWheelEvent *ev) {
     if (abs(spd) > 16)
         spd > 0 ? spd = 16 : spd = -16;
 
-    if(!timerUpdateOffset->isActive())
-            timerUpdateOffset->start(16);
+    startTimerUpdateOffset();
 
     startTimerUpdate();
 }
@@ -178,6 +177,23 @@ void ButtonTable::adjustWidth() {
 
 void ButtonTable::addItem(ButtonTableItem *item) {
     vItems.append(item);
+    startTimerUpdateOffset();
+    startTimerUpdate();
+}
+
+void ButtonTable::removeItem(ButtonTableItem *item) {
+    vItems.removeOne(item);
+    delete item;
+    startTimerUpdateOffset();
+    startTimerUpdate();
+}
+
+void ButtonTable::clearItem() {
+    for(auto item : vItems)
+        delete item;
+    vItems.clear();
+    startTimerUpdateOffset();
+    startTimerUpdate();
 }
 
 int ButtonTable::getIndex(QPoint mouse) {
@@ -202,6 +218,11 @@ int ButtonTable::getIndex(QPoint mouse) {
         return -1;
 
     return index;
+}
+
+void ButtonTable::startTimerUpdateOffset() {
+    if(!timerUpdateOffset->isActive())
+            timerUpdateOffset->start(16);
 }
 
 void ButtonTable::startTimerUpdate() {

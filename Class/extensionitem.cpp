@@ -1,6 +1,6 @@
 #include "extensionitem.h"
 
-ExtensionItem::ExtensionItem(LibManager libManager)
+ExtensionItem::ExtensionItem(const LibManager &libManager)
     : libManager(libManager) {}
 
 void ExtensionItem::onPaint(QPainter &p, QRect r, ButtonFlag flag) {

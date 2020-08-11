@@ -32,8 +32,7 @@ public:
         p.fillRect(r, dwColor);
     }
 };
-//Q_DECLARE_METATYPE(ButtonTableItem);
-//#define DEC_BUTTONTABLEITEM_METATYPE qRegisterMetaType<ButtonTableItem>("ButtonTableItem");
+
 
 class ButtonTable : public QWidget
 {
@@ -52,6 +51,8 @@ public:
     void adjustWidth();
 
     void addItem(ButtonTableItem* item);
+    void removeItem(ButtonTableItem* item);
+    void clearItem();
 
     int getIndex(QPoint mouse);
 
@@ -89,6 +90,7 @@ private:
     int mouseIndex = -1;
     bool isHolding = false;
 
+    void startTimerUpdateOffset();
     QTimer* timerUpdateOffset = new QTimer(this);
     int spd = 0;
     int yOffset = 0;
