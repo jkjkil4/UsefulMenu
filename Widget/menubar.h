@@ -9,6 +9,8 @@
 
 #include "iconbtn.h"
 
+#include <QMessageBox>
+
 class MenuBar : public QWidget
 {
     Q_OBJECT

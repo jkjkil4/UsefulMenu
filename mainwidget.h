@@ -11,6 +11,7 @@
 #include "namespace.h"
 #include "Class/extensionitem.h"
 #include "Widget/menubar.h"
+#include "Class/globalshortcut.h"
 
 #include <QVBoxLayout>
 
@@ -20,15 +21,20 @@
 #include <QSystemTrayIcon>
 #include <QScreen>
 
+#include <QSettings>
+
 class MainWidget : public QWidget
 {
     Q_OBJECT
 protected:
+    void keyPressEvent(QKeyEvent* ev) override {
+        qDebug() << ev->text();
+    }
     void paintEvent(QPaintEvent*) override;
 
 public:
     explicit MainWidget(QWidget *parent = nullptr);
-    ~MainWidget() override = default;
+    ~MainWidget() override;
 
     void moveToProperPos();
 

@@ -2,13 +2,23 @@
 
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
+    QSettings config("Config/UsefulMenu.ini", QSettings::IniFormat);
+
+    globalShortcut = new QxtGlobalShortcut(this);
+    if(!globalShortcut->setShortcut(QKeySequence(config.value("config/GlobalShortcut", "Alt+Q").toString())))
+        QMessageBox::warning(this, "警告", "快捷键被占用");
+
+    connect(globalShortcut, &QxtGlobalShortcut::activated, [=]{
+        moveToProperPos();
+        setVisible(true);
+    });
+
     //读取库
     QDir dir("Extensions");
     QStringList extensions = dir.entryList(QDir::Files);
     for(QString& extension : extensions) {
         vLibs.append(new QLibrary("Extensions/" + extension, this));
     }
-
 
     //创建控件
     MenuBar* menuBar = new MenuBar;
@@ -72,6 +82,14 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
         trayIcon->showMessage("提示", "UsefulMenu已经启动", QIcon());
     }
+
+    setFocusPolicy(Qt::ClickFocus);
+    setFocus();
+}
+
+MainWidget::~MainWidget() {
+    QSettings config("Config/UsefulMenu.ini", QSettings::IniFormat);
+    config.setValue("config/GlobalShortcut", globalShortcut->shortcut().toString());
 }
 
 void MainWidget::moveToProperPos() {

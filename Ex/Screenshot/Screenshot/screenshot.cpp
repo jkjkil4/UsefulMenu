@@ -22,14 +22,17 @@ QPixmap getLibPixmap() {
 
 void Main() {
     QImage img = QApplication::primaryScreen()->grabWindow(0).toImage();
-    QSettings config("config/Screenshot.ini", QSettings::IniFormat);
+    QSettings config("Config/Screenshot.ini", QSettings::IniFormat);
 
     if(config.value("config/hasWidget", true).toBool()) {
         Screenshot* screenshot = new Screenshot(img);
         screenshot->setAttribute(Qt::WA_DeleteOnClose, true);
         screenshot->exec();
     } else {
-        Screenshot::saveImage(img, img.rect(), "ScreenShot/" + Screenshot::getSaveFileName());
+        QDir dir;
+        if(!dir.exists("Data/ScreenShot"))
+            dir.mkpath("Data/ScreenShot");
+        Screenshot::saveImage(img, img.rect(), "Data/ScreenShot/" + Screenshot::getSaveFileName());
     }
 }
 
@@ -232,15 +235,15 @@ void Screenshot::onAreaChangeDone() {
 
 void Screenshot::onBtnSavePressed() {
     QDir dir;
-    if(!dir.exists("ScreenShot"))
-        dir.mkdir("ScreenShot");
+    if(!dir.exists("Data/ScreenShot"))
+        dir.mkpath("Data/ScreenShot");
 
-    saveImage(img, cutRect, "ScreenShot/" + getSaveFileName(), this);
+    saveImage(img, cutRect, "Data/ScreenShot/" + getSaveFileName(), this);
 }
 
 void Screenshot::onBtnSaveAsPressed() {
     //打开ini文件
-    QSettings config("config/Screenshot.ini", QSettings::IniFormat);
+    QSettings config("Config/Screenshot.ini", QSettings::IniFormat);
     //从ini中得到原先存储图片的路径
     QString pathBefore = config.value("path/saveImagePath", "").toString();
     //从用户处得到存储图片的路径

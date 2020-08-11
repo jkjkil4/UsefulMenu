@@ -30,12 +30,14 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     Class/extensionitem.cpp \
+    Class/globalshortcut.cpp \
     Widget/iconbtn.cpp \
     Widget/menubar.cpp \
     mainwidget.cpp
 
 HEADERS += \
     Class/extensionitem.h \
+    Class/globalshortcut.h \
     Class/libmanager.h \
     Widget/iconbtn.h \
     Widget/menubar.h \
