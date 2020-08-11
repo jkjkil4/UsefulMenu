@@ -41,6 +41,19 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     setLayout(layout);
 
 
+    //设置窗口属性
+    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::SubWindow);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_QuitOnClose, true);
+
+
+    //调整大小
+    adjustSize();
+    resize(width(), 400);
+
+    moveToProperPos();
+
+
     //创建系统托盘图标
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {      //判断系统是否支持系统托盘图标
         QMessageBox::information(this, "提示", "系统不支持托盘图标");
@@ -56,20 +69,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
         trayIcon->setContextMenu(menu);     //设置托盘菜单
         trayIcon->show();
         connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+        trayIcon->showMessage("提示", "UsefulMenu已经启动", QIcon());
     }
-
-
-    //设置窗口属性
-    setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::SubWindow);
-    setAttribute(Qt::WA_TranslucentBackground, true);
-    setAttribute(Qt::WA_QuitOnClose, true);
-
-
-    //调整大小
-    adjustSize();
-    resize(width(), 400);
-
-    moveToProperPos();
 }
 
 void MainWidget::moveToProperPos() {
@@ -92,7 +94,7 @@ void MainWidget::verifyClose() {
 }
 
 void MainWidget::onBtnTableClicked(void *item) {
-    //setVisible(false);
+    setVisible(false);
     ExtensionItem* extension = (ExtensionItem*)item;
     extension->libManager.fMain();
 }

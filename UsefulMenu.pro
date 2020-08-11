@@ -49,7 +49,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 # include
-include( $$PWD/../../_1Classes/JQCPUMonitor/JQLibrary/JQCPUMonitor.pri )
 include( $$PWD/../../_1Classes/qxtglobalshortcut5-master/qxt.pri )
 
 

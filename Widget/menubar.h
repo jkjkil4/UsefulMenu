@@ -27,6 +27,9 @@ signals:
 
 private:
     IconBtn* btnExit = new IconBtn(QIcon(":/MainWidgetBtn/Resource/Exit.png"));
+
+    IconBtn* btnAbout = new IconBtn(QIcon(":/MainWidgetBtn/Resource/About.png"));
+    IconBtn* btnSettings = new IconBtn(QIcon(":/MainWidgetBtn/Resource/Settings.png"));
     IconBtn* btnHide = new IconBtn(QIcon(":/MainWidgetBtn/Resource/min.png"));
 
     QPoint mousePosStart;

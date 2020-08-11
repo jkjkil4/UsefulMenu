@@ -2,6 +2,8 @@
     <qresource prefix="/MainWidgetBtn">
         <file>Resource/Exit.png</file>
         <file>Resource/min.png</file>
+        <file>Resource/Settings.png</file>
+        <file>Resource/About.png</file>
     </qresource>
     <qresource prefix="/MainWidget">
         <file>A.ico</file>
