@@ -4,16 +4,21 @@
 #include <QWidget>
 #include <QLibrary>
 #include <QFileInfo>
+#include <QMenu>
 
 typedef void(QWidget::*ShowFunc)();
 
 class LibManager
 {
 public:
-    typedef void(*FuncMain)();
     typedef QString(*FuncLibName)();
     typedef QPixmap(*FuncLibPixmap)();
+
+    typedef void(*FuncMain)(QWidget*);
     typedef void(*FuncSetShowFuncPtr)(QWidget*, ShowFunc);
+
+    typedef void(*FuncAppendAction)(QMenu*);
+    typedef void(*FuncCheckAction)(QAction*);
 
     LibManager(QLibrary* lib) : lib(lib) {
         FuncLibName funcLibName = (FuncLibName)lib->resolve("getLibName");
@@ -31,24 +36,37 @@ public:
 
         funcMain = (FuncMain)lib->resolve("Main");
         setShowFuncPtr = (FuncSetShowFuncPtr)lib->resolve("setShowFuncPtr");
-
+        appendAction = (FuncAppendAction)lib->resolve("appendAction");
+        checkAction = (FuncCheckAction)lib->resolve("checkAction");
     }
 
     QLibrary* lib;
     QString libName;
     QPixmap libPixmap;
 
-    FuncMain funcMain;
-    void fMain() {
+    void fMain(QWidget* widget) {
         if(funcMain)
-            (*funcMain)();
+            (*funcMain)(widget);
     }
-
-    FuncSetShowFuncPtr setShowFuncPtr;
     void fSetShowFuncPtr(QWidget* funcWidget, ShowFunc func) {
         if(setShowFuncPtr)
-            (setShowFuncPtr)(funcWidget, func);
+            (*setShowFuncPtr)(funcWidget, func);
     }
+    void fAppendAction(QMenu *menu) {
+        if(appendAction)
+            (*appendAction)(menu);
+    }
+    void fCheckAction(QAction *resAction) {
+        if(checkAction)
+            (*checkAction)(resAction);
+    }
+
+
+private:
+    FuncMain funcMain;
+    FuncSetShowFuncPtr setShowFuncPtr;
+    FuncAppendAction appendAction;
+    FuncCheckAction checkAction;
 };
 
 #endif // LIBMANAGER_H

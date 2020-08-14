@@ -112,20 +112,45 @@ void ButtonTable::mouseMoveEvent(QMouseEvent *ev) {
 void ButtonTable::mouseReleaseEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         if(mouseIndex != -1) {
-            int xPos = mouseIndex % btnXCount;
-            int yPos = mouseIndex / btnXCount;
+            //int xPos = mouseIndex % btnXCount;
+            //int yPos = mouseIndex / btnXCount;
 
-            int rectX = margin + xPos * (btnWidth + spacing);
-            int rectY = margin + yPos * (btnHeight + spacing);
-            if(QRect(rectX, rectY + yOffset, btnWidth, btnHeight).contains(ev->pos())) {
-                emit clicked((void*)vItems[mouseIndex]);
-            }
+            //int rectX = margin + xPos * (btnWidth + spacing);
+            //int rectY = margin + yPos * (btnHeight + spacing);
+            //if(QRect(rectX, rectY + yOffset, btnWidth, btnHeight).contains(ev->pos())) {
+                emit clicked(vItems[mouseIndex]);
+            //}
         }
 
         isHolding = false;
         mouseIndex = getIndex(ev->pos());
 
         startTimerUpdate();
+    } else if(ev->button() == Qt::RightButton) {
+        if(mouseIndex != -1) {
+            QAction actMoveLeft("左移");
+            QAction actMoveRight("右移");
+            QAction actMoveUp("上移");
+            QAction actMoveDown("下移");
+
+            QMenu menu;
+            menu.move(cursor().pos());
+            menu.addActions(QList<QAction*>() << &actMoveLeft << &actMoveRight << &actMoveUp << &actMoveDown);
+            emit appendAction(&menu, vItems[mouseIndex]);
+            QAction* res = menu.exec();
+
+            if(res) {
+                if(res == &actMoveLeft) {
+                    moveItem(mouseIndex, mouseIndex - 1);
+                } else if(res == &actMoveRight) {
+                    moveItem(mouseIndex, mouseIndex + 1);
+                } else if(res == &actMoveUp) {
+                    moveItem(mouseIndex, mouseIndex - btnXCount);
+                } else if(res == &actMoveDown) {
+                    moveItem(mouseIndex, mouseIndex + btnXCount);
+                } else emit checkAction(res, vItems[mouseIndex]);
+            }
+        }
     }
 }
 
@@ -173,6 +198,20 @@ void ButtonTable::adjustWidth() {
     int w = (btnWidth + spacing) * btnXCount - spacing + 2 * margin;
     setMinimumWidth(w);
     setMaximumWidth(w);
+}
+
+void ButtonTable::moveItem(int index, int toIndex) {
+    int vSize = vItems.size();
+    if(vSize == 0 || index < 0 || index >= vSize)
+        return;
+    toIndex = qBound(0, toIndex, vSize - 1);
+    if(toIndex == index)
+        return;
+    ButtonTableItem *tmpItem = vItems[index];
+    vItems[index] = vItems[toIndex];
+    vItems[toIndex] = tmpItem;
+
+    emit itemMoved(vItems[toIndex], vItems[index]);
 }
 
 void ButtonTable::addItem(ButtonTableItem *item) {

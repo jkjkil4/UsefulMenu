@@ -3,6 +3,7 @@
 
 
 #include <QWidget>
+#include <QMenu>
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -50,6 +51,8 @@ public:
 
     void adjustWidth();
 
+    void moveItem(int index, int toIndex);
+
     void addItem(ButtonTableItem* item);
     void removeItem(ButtonTableItem* item);
     void clearItem();
@@ -72,7 +75,11 @@ public:
     void setMargin(int value);
 
 signals:
-    void clicked(void*);
+    void clicked(ButtonTableItem*);
+    void itemMoved(ButtonTableItem*, ButtonTableItem*);
+
+    void appendAction(QMenu*, ButtonTableItem*);
+    void checkAction(QAction*, ButtonTableItem*);
 
 private slots:
     void onTimerUpdateOffset();

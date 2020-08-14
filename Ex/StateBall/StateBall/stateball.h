@@ -21,7 +21,7 @@
 extern "C" {
     STATEBALLSHARED_EXPORT QString getLibName();
     STATEBALLSHARED_EXPORT QPixmap getLibPixmap();
-    STATEBALLSHARED_EXPORT void Main();
+    STATEBALLSHARED_EXPORT void Main(QWidget*);
 }
 
 

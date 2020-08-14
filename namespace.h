@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QLibrary>
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -47,6 +49,19 @@ inline void jDrawRecFrame(QPainter& p, int x, int y, int w, int h, int width, QC
     p.fillRect(x + w - width, y + width, width, h - 2 * width, c);
     //底部
     p.fillRect(x, y + h - width, w, width, c);
+}
+
+inline QString getLibFileName(QLibrary* lib) {
+    QString libName = QFileInfo(lib->fileName()).fileName();
+    return libName.left(libName.lastIndexOf('.'));
+}
+
+inline int getLibOrder(const QMap<QString, int> &map, QLibrary *lib) {
+    auto iter = map.find(getLibFileName(lib));
+    if(iter == map.end())
+        return 0;
+
+    return *iter;
 }
 
 #endif // NAMESPACE_H

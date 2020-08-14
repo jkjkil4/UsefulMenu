@@ -20,7 +20,7 @@ QPixmap getLibPixmap() {
     return QPixmap(":/Screenshot/Resource/Screenshot.png");
 }
 
-void Main() {
+void Main(QWidget*) {
     QImage img = QApplication::primaryScreen()->grabWindow(0).toImage();
     QSettings config("Config/Screenshot.ini", QSettings::IniFormat);
 
@@ -36,6 +36,23 @@ void Main() {
     }
 }
 
+
+static QAction *actOpenDir;
+
+void appendAction(QMenu *menu) {
+    actOpenDir = new QAction("打开截图文件夹");
+
+    menu->addSeparator();
+    menu->addAction(actOpenDir);
+}
+
+void checkAction(QAction *res) {
+    if(res == actOpenDir) {
+        QDir dir;
+        dir.mkpath("Data/Screenshot");
+        QProcess::startDetached("explorer.exe \"Data\\Screenshot\"");
+    }
+}
 
 
 

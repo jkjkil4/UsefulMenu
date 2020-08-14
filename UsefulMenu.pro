@@ -33,14 +33,19 @@ SOURCES += main.cpp \
     Class/globalshortcut.cpp \
     Widget/iconbtn.cpp \
     Widget/menubar.cpp \
+    Widget/settingswidget.cpp \
+    Widget/shortcutedit.cpp \
     mainwidget.cpp
 
 HEADERS += \
     Class/extensionitem.h \
     Class/globalshortcut.h \
+    Class/lib.h \
     Class/libmanager.h \
     Widget/iconbtn.h \
     Widget/menubar.h \
+    Widget/settingswidget.h \
+    Widget/shortcutedit.h \
     mainwidget.h \
     namespace.h
 

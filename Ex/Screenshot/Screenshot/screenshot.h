@@ -7,6 +7,7 @@
 
 #include <QDialog>
 #include <QMessageBox>
+#include <QMenu>
 
 #include <QApplication>
 #include <QScreen>
@@ -18,12 +19,16 @@
 #include <QClipboard>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QProcess>
 
 extern "C" {
     SCREENSHOTSHARED_EXPORT QString getLibName();
     SCREENSHOTSHARED_EXPORT QPixmap getLibPixmap();
 
-    SCREENSHOTSHARED_EXPORT void Main();
+    SCREENSHOTSHARED_EXPORT void Main(QWidget*);
+
+    SCREENSHOTSHARED_EXPORT void appendAction(QMenu *menu);
+    SCREENSHOTSHARED_EXPORT void checkAction(QAction *res);
 }
 
 class AreaParent;

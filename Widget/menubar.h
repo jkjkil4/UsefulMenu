@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 
 #include "iconbtn.h"
+#include "Widget/settingswidget.h"
 
 #include <QMessageBox>
 
@@ -26,6 +27,9 @@ signals:
     void wndClose();
     void wndHide();
     void wndMoveOffset(int, int);
+
+    void onSettingsClicked();
+    void onAboutClicked();
 
 private:
     IconBtn* btnExit = new IconBtn(QIcon(":/MainWidgetBtn/Resource/Exit.png"));

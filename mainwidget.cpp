@@ -6,12 +6,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
     globalShortcut = new QxtGlobalShortcut(this);
     if(!globalShortcut->setShortcut(QKeySequence(config.value("config/GlobalShortcut", "Alt+Q").toString())))
-        QMessageBox::warning(this, "警告", "快捷键被占用");
+        QMessageBox::warning(this, "警告", "快捷键被占用或无效");
 
-    connect(globalShortcut, &QxtGlobalShortcut::activated, [=]{
-        moveToProperPos();
-        setVisible(true);
-    });
+    connect(globalShortcut, &QxtGlobalShortcut::activated, [=]{ myShow(); });
 
     //读取哪些库被禁用了
     QVector<QString> vDisabledLib;
@@ -56,14 +53,42 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     connect(menuBar, &MenuBar::wndHide, [=]{ hide(); });
     connect(menuBar, &MenuBar::wndMoveOffset, [=](int xOffset, int yOffset){
         int toX = x() + xOffset, toY = y() + yOffset;
-
         QRect screenRect =  QGuiApplication::primaryScreen()->availableVirtualGeometry();
         toX = qBound(0, toX, screenRect.width() - width());
         toY = qBound(0, toY, screenRect.height() - height());
         move(toX, toY);
     });
+    connect(menuBar, &MenuBar::onSettingsClicked, [=]{
+        SettingsWidget(vLibs).exec();
+        addLibsToBtnTable();
+    });
+    connect(menuBar, &MenuBar::onAboutClicked, [=]{
+        QAction actAbout("关于");
+        QAction actAboutQt("关于Qt");
 
-    connect(btnTable, SIGNAL(clicked(void*)), this, SLOT(onBtnTableClicked(void*)));
+        QMenu menu;
+        menu.addActions(QList<QAction*>() << &actAbout << &actAboutQt);
+        menu.move(cursor().pos());
+        QAction* res = menu.exec();
+
+        if(res == &actAbout) {
+            QMessageBox::about(this, "关于",
+                               "作者: jkjkil4<br>"
+                               "github: <a href = https://github.com/jkjkil4/UsefulMenu>https://github.com/jkjkil4/UsefulMenu</a><br>"
+                               "反馈问题: jkjkil@qq.com");
+        } else if(res == &actAboutQt) {
+            QMessageBox::aboutQt(this);
+        }
+    });
+
+    connect(btnTable, SIGNAL(clicked(ButtonTableItem*)), this, SLOT(onBtnTableClicked(ButtonTableItem*)));
+    connect(btnTable, SIGNAL(itemMoved(ButtonTableItem*, ButtonTableItem*)), this, SLOT(onBtnTableItemMoved(ButtonTableItem*, ButtonTableItem*)));
+    connect(btnTable, &ButtonTable::appendAction, [](QMenu *menu, ButtonTableItem *item){
+        ((ExtensionItem*)item)->libManager.fAppendAction(menu);
+    });
+    connect(btnTable, &ButtonTable::checkAction, [](QAction *act, ButtonTableItem *item) {
+        ((ExtensionItem*)item)->libManager.fCheckAction(act);
+    });
     addLibsToBtnTable();
 
     QVBoxLayout* layout = new QVBoxLayout;
@@ -157,6 +182,11 @@ void MainWidget::moveToProperPos() {
     move(toX, toY);
 }
 
+void MainWidget::myShow() {
+    moveToProperPos();
+    setVisible(true);
+}
+
 void MainWidget::verifyClose() {
     setVisible(true);
     int res = QMessageBox::information(this, "提示", "确认要退出吗", QMessageBox::Yes, QMessageBox::No);
@@ -169,22 +199,45 @@ void MainWidget::addLibsToBtnTable() {
     for(auto& lib : vLibs) {
         if(lib.isEnabled) {
             auto item = new ExtensionItem(lib.lib);
+            item->libManager.fSetShowFuncPtr(this, (ShowFunc)&MainWidget::myShow);
             btnTable->addItem(item);
         }
     }
 }
 
-void MainWidget::onBtnTableClicked(void *item) {
+void MainWidget::onBtnTableClicked(ButtonTableItem *item) {
     setVisible(false);
     ExtensionItem* extension = (ExtensionItem*)item;
-    extension->libManager.fMain();
+    extension->libManager.fMain(this);
+}
+
+void MainWidget::onBtnTableItemMoved(ButtonTableItem *item1, ButtonTableItem *item2) {
+    ExtensionItem *exItem1 = (ExtensionItem*)item1, *exItem2 = (ExtensionItem*)item2;
+    auto iter1 = vLibs.end(), iter2 = vLibs.end();
+    for(auto iter = vLibs.begin(); iter < vLibs.end(); iter++) {
+        if((*iter).lib == exItem1->libManager.lib) {
+            iter1 = iter;
+            break;
+        }
+    }
+    for(auto iter = vLibs.begin(); iter < vLibs.end(); iter++) {
+        if((*iter).lib == exItem2->libManager.lib) {
+            iter2 = iter;
+            break;
+        }
+    }
+    if(iter1 != vLibs.end() && iter2 != vLibs.end()) {
+        Lib &lib1 = *iter1, &lib2 = *iter2;
+        Lib tmpLib = lib1;
+        lib1 = lib2;
+        lib2 = tmpLib;
+    }
 }
 
 void MainWidget::iconActivated(QSystemTrayIcon::ActivationReason reason) {
     switch(reason) {
     case QSystemTrayIcon::DoubleClick:
-        setVisible(true);
-        moveToProperPos();
+        myShow();
         break;
     default:
 

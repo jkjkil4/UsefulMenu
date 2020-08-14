@@ -27,28 +27,23 @@ class MainWidget : public QWidget
 {
     Q_OBJECT
 protected:
-    void keyPressEvent(QKeyEvent* ev) override {
-        qDebug() << ev->text();
-    }
     void paintEvent(QPaintEvent*) override;
 
 public:
-    struct Lib {
-        QLibrary* lib;
-        bool isEnabled;
-    };
-
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget() override;
 
     void moveToProperPos();
 
+    void myShow();
     void verifyClose();
 
     void addLibsToBtnTable();
 
 private slots:
-    void onBtnTableClicked(void* item);
+    void onBtnTableClicked(ButtonTableItem* item);
+    void onBtnTableItemMoved(ButtonTableItem* item1, ButtonTableItem* item2);
+
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
@@ -58,18 +53,5 @@ private:
 
     QVector<Lib> vLibs;
 };
-
-inline QString getLibFileName(QLibrary* lib) {
-    QString libName = QFileInfo(lib->fileName()).fileName();
-    return libName.left(libName.lastIndexOf('.'));
-}
-
-inline int getLibOrder(const QMap<QString, int> &map, QLibrary *lib) {
-    auto iter = map.find(getLibFileName(lib));
-    if(iter == map.end())
-        return 0;
-
-    return *iter;
-}
 
 #endif // WIDGET_H

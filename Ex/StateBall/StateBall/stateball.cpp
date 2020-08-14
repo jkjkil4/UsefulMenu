@@ -13,7 +13,7 @@ QPixmap getLibPixmap() {
 static bool isJQCPUMonitorInited = false;
 static StateBall* curStateBall = nullptr;
 
-void Main() {
+void Main(QWidget*) {
     if(!isJQCPUMonitorInited) {
         isJQCPUMonitorInited = true;
         JQCPUMonitor::initialize();

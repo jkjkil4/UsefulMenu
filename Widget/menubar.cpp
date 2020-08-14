@@ -17,10 +17,10 @@ MenuBar::MenuBar(QWidget *parent) : QWidget(parent)
     connect(btnExit, &IconBtn::clicked, [=]{ emit wndClose(); });
 
     btnAbout->setToolTip("帮助/关于");
-    connect(btnAbout, &IconBtn::clicked, [=]{ QMessageBox::information(this, "提示", "还没做"); });
+    connect(btnAbout, &IconBtn::clicked, [=]{ emit onAboutClicked(); });
 
     btnSettings->setToolTip("设置");
-    connect(btnSettings, &IconBtn::clicked, [=]{ QMessageBox::information(this, "提示", "还没做"); });
+    connect(btnSettings, &IconBtn::clicked, [=]{ emit onSettingsClicked(); });
 
     btnHide->setToolTip("隐藏");
     connect(btnHide, &IconBtn::clicked, [=]{ emit wndHide(); });
