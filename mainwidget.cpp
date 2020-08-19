@@ -107,7 +107,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
     //调整大小
     adjustSize();
-    resize(width(), 400);
+    resize(width(), 360);
 
     moveToProperPos();
 
@@ -128,7 +128,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
         trayIcon->show();
         connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-        trayIcon->showMessage("提示", "UsefulMenu已经启动", QIcon());
+        trayIcon->showMessage("提示", "UsefulMenu已经启动", QSystemTrayIcon::MessageIcon::NoIcon);
     }
 
     setFocusPolicy(Qt::ClickFocus);
@@ -199,7 +199,7 @@ void MainWidget::addLibsToBtnTable() {
     for(auto& lib : vLibs) {
         if(lib.isEnabled) {
             auto item = new ExtensionItem(lib.lib);
-            item->libManager.fSetShowFuncPtr(this, (ShowFunc)&MainWidget::myShow);
+            item->libManager.fSetShowFuncPtr(this, (ShowFunc)&MainWidget::show);
             btnTable->addItem(item);
         }
     }

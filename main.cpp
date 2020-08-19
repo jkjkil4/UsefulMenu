@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+
     QSharedMemory sharedMem;
     sharedMem.setKey(QString("UsefulMenu_SharedMem"));
     if(sharedMem.attach()){
@@ -16,7 +17,16 @@ int main(int argc, char *argv[])
 
     if(sharedMem.create(1)) {
         MainWidget w;
-        return a.exec();
+        int res = a.exec();
+
+        QList<QWidget*> widgetList = QApplication::allWidgets();
+        for(auto widget : widgetList) {
+            if(widget->isTopLevel()) {
+                widget->close();
+            }
+        }
+
+        return res;
     }
 
     return 0;

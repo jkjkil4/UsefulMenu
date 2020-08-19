@@ -2,4 +2,5 @@
 *.user
 /Libs/ButtonTable/build-ButtonTable-Desktop_Qt_5_13_0_MinGW_64_bit-Release
 /Ex/Screenshot/build-Screenshot-Desktop_Qt_5_13_0_MinGW_64_bit-Release
+/Ex/Shortcut/build-Shortcut-Desktop_Qt_5_13_0_MinGW_64_bit-Release
 /Ex/StateBall/build-StateBall-Desktop_Qt_5_13_0_MinGW_64_bit-Release

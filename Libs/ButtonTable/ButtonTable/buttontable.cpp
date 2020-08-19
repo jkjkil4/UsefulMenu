@@ -7,6 +7,9 @@ ButtonTable::ButtonTable(QWidget *parent) : QWidget(parent)
     connect(timerUpdateOffset, SIGNAL(timeout()), this, SLOT(onTimerUpdateOffset()));
     connect(timerCheckMouseOut, SIGNAL(timeout()), this, SLOT(onTimerCheckMouseOut()));
 
+    timerTooltip->setSingleShot(true);
+    connect(timerTooltip, SIGNAL(timeout()), this, SLOT(onShowTooltip()));
+
     timerUpdate->setSingleShot(true);
     connect(timerUpdate, &QTimer::timeout, [=]{ update(); });
 
@@ -69,11 +72,28 @@ void ButtonTable::onTimerUpdateOffset() {
         } else isMoving = false;
     }
 
-    mouseIndex = getIndex(mapFromGlobal(cursor().pos()));
+    updateMouseIndexByMousePos();
+
     startTimerUpdate();
 
     if(spd == 0 && !isMoving)
         timerUpdateOffset->stop();
+}
+
+void ButtonTable::onShowTooltip() {
+    mouseIndex == -1 ? QToolTip::hideText() : QToolTip::showText(cursor().pos(), vItems[mouseIndex]->tooltipText());
+}
+
+void ButtonTable::setMouseIndex(int index) {
+    if(index != mouseIndex) {
+        mouseIndex = index;
+        if(!timerTooltip->isActive())
+            timerTooltip->start(1200);
+    }
+}
+
+void ButtonTable::updateMouseIndexByMousePos() {
+    setMouseIndex(getIndex(mapFromGlobal(cursor().pos())));
 }
 
 
@@ -81,8 +101,8 @@ void ButtonTable::onTimerCheckMouseOut() {
     if(isHolding)
         return;
 
-    if(!IsRectContains(mapFromGlobal(cursor().pos()))) {
-        mouseIndex = -1;
+    if(!hasMenu && !IsRectContains(mapFromGlobal(cursor().pos()))) {
+        setMouseIndex(-1);
         timerCheckMouseOut->stop();
 
         startTimerUpdate();
@@ -93,7 +113,7 @@ void ButtonTable::onTimerCheckMouseOut() {
 void ButtonTable::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         isHolding = true;
-        mouseIndex = getIndex(ev->pos());
+        updateMouseIndexByMousePos();
 
         startTimerUpdate();
     }
@@ -103,7 +123,7 @@ void ButtonTable::mouseMoveEvent(QMouseEvent *ev) {
     if(!(ev->buttons() & Qt::LeftButton)) {
         if(!timerCheckMouseOut->isActive())
             timerCheckMouseOut->start(8);
-        mouseIndex = getIndex(ev->pos());
+        updateMouseIndexByMousePos();
     }
 
     startTimerUpdate();
@@ -123,11 +143,15 @@ void ButtonTable::mouseReleaseEvent(QMouseEvent *ev) {
         }
 
         isHolding = false;
-        mouseIndex = getIndex(ev->pos());
+
+        updateMouseIndexByMousePos();
 
         startTimerUpdate();
     } else if(ev->button() == Qt::RightButton) {
         if(mouseIndex != -1) {
+            hasMenu = true;
+            QToolTip::hideText();
+
             QAction actMoveLeft("左移");
             QAction actMoveRight("右移");
             QAction actMoveUp("上移");
@@ -150,6 +174,8 @@ void ButtonTable::mouseReleaseEvent(QMouseEvent *ev) {
                     moveItem(mouseIndex, mouseIndex + btnXCount);
                 } else emit checkAction(res, vItems[mouseIndex]);
             }
+
+            hasMenu = false;
         }
     }
 }
@@ -211,6 +237,8 @@ void ButtonTable::moveItem(int index, int toIndex) {
     vItems[index] = vItems[toIndex];
     vItems[toIndex] = tmpItem;
 
+    QToolTip::hideText();
+    startTimerUpdate();
     emit itemMoved(vItems[toIndex], vItems[index]);
 }
 

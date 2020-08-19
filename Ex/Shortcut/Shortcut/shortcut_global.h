@@ -1,0 +1,12 @@
+#ifndef SHORTCUT_GLOBAL_H
+#define SHORTCUT_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(SHORTCUT_LIBRARY)
+#  define SHORTCUTSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define SHORTCUTSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // SHORTCUT_GLOBAL_H

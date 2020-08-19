@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/ShortcutBtn">
+        <file>Resource/Back.png</file>
+        <file>Resource/Add.png</file>
+        <file>Resource/Close.png</file>
+    </qresource>
+    <qresource prefix="/Shortcut">
+        <file>Resource/Shortcut.png</file>
+    </qresource>
+</RCC>

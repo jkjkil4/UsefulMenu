@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QTimer>
+#include <QToolTip>
 
 class ButtonTableItem
 {
@@ -32,6 +33,8 @@ public:
         }
         p.fillRect(r, dwColor);
     }
+
+    virtual QString tooltipText() { return ""; }
 };
 
 
@@ -74,6 +77,8 @@ public:
     int getMargin() const;
     void setMargin(int value);
 
+    QVector<ButtonTableItem*> vItems;
+
 signals:
     void clicked(ButtonTableItem*);
     void itemMoved(ButtonTableItem*, ButtonTableItem*);
@@ -85,6 +90,8 @@ private slots:
     void onTimerUpdateOffset();
     void onTimerCheckMouseOut();
 
+    void onShowTooltip();
+
 private:
     int btnWidth = 64;
     int btnHeight = 64;
@@ -92,10 +99,12 @@ private:
     int spacing = 3;
     int margin = 3;
 
-    QVector<ButtonTableItem*> vItems;
-
+    QTimer *timerTooltip = new QTimer(this);
+    void setMouseIndex(int index);
+    void updateMouseIndexByMousePos();
     int mouseIndex = -1;
     bool isHolding = false;
+    bool hasMenu = false;
 
     void startTimerUpdateOffset();
     QTimer* timerUpdateOffset = new QTimer(this);

@@ -37,17 +37,15 @@ void Main(QWidget*) {
 }
 
 
-static QAction *actOpenDir;
+static QAction actOpenDir("打开截图文件夹");
 
 void appendAction(QMenu *menu) {
-    actOpenDir = new QAction("打开截图文件夹");
-
     menu->addSeparator();
-    menu->addAction(actOpenDir);
+    menu->addAction(&actOpenDir);
 }
 
 void checkAction(QAction *res) {
-    if(res == actOpenDir) {
+    if(res == &actOpenDir) {
         QDir dir;
         dir.mkpath("Data/Screenshot");
         QProcess::startDetached("explorer.exe \"Data\\Screenshot\"");
