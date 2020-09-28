@@ -2,7 +2,7 @@
 
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
-    QSettings config("Config/UsefulMenu.ini", QSettings::IniFormat);
+    QSettings config(APP_DIR + "/Config/UsefulMenu.ini", QSettings::IniFormat);
 
     globalShortcut = new QxtGlobalShortcut(this);
     if(!globalShortcut->setShortcut(QKeySequence(config.value("config/GlobalShortcut", "Alt+Q").toString())))
@@ -12,7 +12,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
     //读取哪些库被禁用了
     QVector<QString> vDisabledLib;
-    QFile fileDisabledLib("Config/DisabledLib");
+    QFile fileDisabledLib(APP_DIR + "/Config/DisabledLib");
     if(fileDisabledLib.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&fileDisabledLib);
         while(!in.atEnd()) {
@@ -22,7 +22,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     }
 
     //读取库
-    QDir dir("Extensions");
+    QDir dir(APP_DIR + "/Extensions");
     QStringList extensions = dir.entryList(QDir::Files);
     for(QString& extension : extensions) {
         QLibrary* lib = new QLibrary("Extensions/" + extension, this);
@@ -31,7 +31,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 
     //读取库顺序
     QMap<QString, int> libOrderMap;
-    QFile fileLibOrder("Config/LibOrder");
+    QFile fileLibOrder(APP_DIR + "/Config/LibOrder");
     if(fileLibOrder.open(QIODevice::ReadOnly | QIODevice::Text)) {
         int order = 1;
         QTextStream in(&fileLibOrder);
@@ -136,11 +136,11 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 }
 
 MainWidget::~MainWidget() {
-    QSettings config("Config/UsefulMenu.ini", QSettings::IniFormat);
+    QSettings config(APP_DIR + "/Config/UsefulMenu.ini", QSettings::IniFormat);
     config.setValue("config/GlobalShortcut", globalShortcut->shortcut().toString());
 
     //记录被禁用的库
-    QFile fileDisabledLib("Config/DisabledLib");
+    QFile fileDisabledLib(APP_DIR + "/Config/DisabledLib");
     if(fileDisabledLib.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&fileDisabledLib);
         bool hasPrev = false;
@@ -156,7 +156,7 @@ MainWidget::~MainWidget() {
     }
 
     //记录库的顺序
-    QFile fileLibOrder("Config/LibOrder");
+    QFile fileLibOrder(APP_DIR + "/Config/LibOrder");
     if(fileLibOrder.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&fileLibOrder);
         bool hasPrev = false;

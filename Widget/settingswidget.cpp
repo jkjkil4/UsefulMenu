@@ -66,7 +66,7 @@ SettingsWidget::SettingsWidget(QVector<Lib> &vLibs, QWidget *parent)
 
 
 void SettingsWidget::onOpenExDir() {
-    QDir dir;
+    QDir dir(APP_DIR);
     if(dir.cd("Extensions")) {
         QProcess::startDetached("explorer.exe Extensions");
     }

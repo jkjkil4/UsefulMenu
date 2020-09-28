@@ -5,12 +5,15 @@
 #include <QPainter>
 #include <QLibrary>
 #include <QFileInfo>
+#include <QCoreApplication>
 
 #include <QDebug>
 
 #define SC static constexpr
 
 #define repeat(v, n) for(int v = 0; v < n; v++)
+
+#define APP_DIR QCoreApplication::applicationDirPath()
 
 //#define MOD(a, b) a >= 0 ? a % b : -(-a % b)
 
