@@ -53,6 +53,7 @@ void ImgView::paintEvent(QPaintEvent *) {
         QColor pixelColor = img->pixelColor(focusPos);
         p.drawText(rect, Qt::AlignCenter | Qt::AlignVCenter,
                    "POS:(" + QString::number(focusPos.x()) + ", " + QString::number(focusPos.y()) +
-                   ")\nRGB:(" + QString::number(pixelColor.red()) + ", " + QString::number(pixelColor.green()) + ", " + QString::number(pixelColor.blue()) + ")");
+                   ")\nRGB:(" + QString::number(pixelColor.red()) + ", " + QString::number(pixelColor.green()) +
+                   ", " + QString::number(pixelColor.blue()) + ")");
     }
 }

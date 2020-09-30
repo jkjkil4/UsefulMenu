@@ -2,10 +2,12 @@
 #define HEADER_H
 
 #include <QWidget>
+#include <QCoreApplication>
 
 #include <QPainter>
 
 #define SC static constexpr
+#define APP_DIR QCoreApplication::applicationDirPath()
 
 
 #define GET_VARIBLE_FUNC(FuncName, varibleName, varibleType)\

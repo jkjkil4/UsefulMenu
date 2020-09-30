@@ -21,6 +21,7 @@
 #include <QPainter>
 #include <QProcess>
 
+
 extern "C" {
     SCREENSHOTSHARED_EXPORT QString getLibName();
     SCREENSHOTSHARED_EXPORT QPixmap getLibPixmap();

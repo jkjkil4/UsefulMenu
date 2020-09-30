@@ -22,7 +22,7 @@ QPixmap getLibPixmap() {
 
 void Main(QWidget*) {
     QImage img = QApplication::primaryScreen()->grabWindow(0).toImage();
-    QSettings config("Config/Screenshot.ini", QSettings::IniFormat);
+    QSettings config(APP_DIR + "/Config/Screenshot.ini", QSettings::IniFormat);
 
     if(config.value("config/hasWidget", true).toBool()) {
         Screenshot* screenshot = new Screenshot(img);
@@ -30,9 +30,9 @@ void Main(QWidget*) {
         screenshot->exec();
     } else {
         QDir dir;
-        if(!dir.exists("Data/ScreenShot"))
-            dir.mkpath("Data/ScreenShot");
-        Screenshot::saveImage(img, img.rect(), "Data/ScreenShot/" + Screenshot::getSaveFileName());
+        if(!dir.exists(APP_DIR + "/Data/ScreenShot"))
+            dir.mkpath(APP_DIR + "/Data/ScreenShot");
+        Screenshot::saveImage(img, img.rect(), APP_DIR + "/Data/ScreenShot/" + Screenshot::getSaveFileName());
     }
 }
 
@@ -47,8 +47,9 @@ void appendAction(QMenu *menu) {
 void checkAction(QAction *res) {
     if(res == &actOpenDir) {
         QDir dir;
-        dir.mkpath("Data/Screenshot");
-        QProcess::startDetached("explorer.exe \"Data\\Screenshot\"");
+        dir.mkpath(APP_DIR + "/Data/Screenshot");
+        QProcess::startDetached("cmd.exe", QStringList() << "/c" << "start" << "" << APP_DIR + "/Data/Screenshot");
+        //QProcess::startDetached("explorer.exe \"Data\\Screenshot\"");
     }
 }
 
@@ -250,15 +251,15 @@ void Screenshot::onAreaChangeDone() {
 
 void Screenshot::onBtnSavePressed() {
     QDir dir;
-    if(!dir.exists("Data/ScreenShot"))
-        dir.mkpath("Data/ScreenShot");
+    if(!dir.exists(APP_DIR + "/Data/ScreenShot"))
+        dir.mkpath(APP_DIR + "/Data/ScreenShot");
 
-    saveImage(img, cutRect, "Data/ScreenShot/" + getSaveFileName(), this);
+    saveImage(img, cutRect, APP_DIR + "/Data/ScreenShot/" + getSaveFileName(), this);
 }
 
 void Screenshot::onBtnSaveAsPressed() {
     //打开ini文件
-    QSettings config("Config/Screenshot.ini", QSettings::IniFormat);
+    QSettings config(APP_DIR + "/Config/Screenshot.ini", QSettings::IniFormat);
     //从ini中得到原先存储图片的路径
     QString pathBefore = config.value("path/saveImagePath", "").toString();
     //从用户处得到存储图片的路径

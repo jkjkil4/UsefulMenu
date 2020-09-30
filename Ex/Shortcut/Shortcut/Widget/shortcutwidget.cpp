@@ -43,7 +43,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
         QAction* res = menu.exec();
 
         if(res == &actAddFile || res == &actAddDir) {
-            QSettings config("Config/Shortcut.ini", QSettings::IniFormat);
+            QSettings config(APP_DIR + "/Config/Shortcut.ini", QSettings::IniFormat);
             QString path = config.value("config/dialogPath", "").toString();
 
             QString filePath = res == &actAddFile
@@ -66,7 +66,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
 
 
     //读取路径
-    QFile pathsFile("Config/ShortcutPaths");
+    QFile pathsFile(APP_DIR + "/Config/ShortcutPaths");
     if(pathsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&pathsFile);
         while(!in.atEnd()) {
@@ -95,7 +95,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent)
 }
 
 ShortcutWidget::~ShortcutWidget() {
-    QFile pathsFile("Config/ShortcutPaths");
+    QFile pathsFile(APP_DIR + "/Config/ShortcutPaths");
     if(pathsFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream out(&pathsFile);
         bool hasPrev = false;
